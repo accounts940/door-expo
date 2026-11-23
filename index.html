@@ -101,7 +101,46 @@ html{scroll-behavior:smooth;overscroll-behavior-y:none}body{background:linear-gr
 .rip{position:absolute;border-radius:50%;background:#ffffff66;transform:scale(0);animation:rp .6s ease-out;pointer-events:none}.item .rip,.step .rip,.mic .rip,.btn.l .rip{background:#14226b22}@keyframes rp{to{transform:scale(2.6);opacity:0}}
 .mic.on{box-shadow:0 0 0 6px #d6202733}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}.pipe i{width:var(--w)!important}}
-@keyframes pw2{to{width:var(--w)!important}}</style></head><body>
+@keyframes pw2{to{width:var(--w)!important}}
+/* ===== login v2 ===== */
+body.lgn .top{display:none}body.lgn main{max-width:none;padding:0}body.lgn{padding-bottom:0}
+.lg2{min-height:100vh;min-height:100dvh;display:grid;grid-template-columns:1fr;background:linear-gradient(135deg,#0c1650,#14226b 50%,#0b5d34);position:relative;overflow:hidden}
+.lg2-l{position:relative;padding:calc(34px + env(safe-area-inset-top)) 24px 10px;color:#fff;overflow:hidden}
+.lg2-l::before{content:"";position:absolute;inset:0;background:var(--hero) center/cover;opacity:.2;mix-blend-mode:luminosity}
+.orb{position:absolute;border-radius:50%;filter:blur(40px);opacity:.5;animation:fl 10s ease-in-out infinite alternate}.o1{width:240px;height:240px;background:#d62027;right:-60px;top:-80px}.o2{width:220px;height:220px;background:#1f9d55;left:-70px;bottom:-60px;animation-delay:-5s}.o3{width:140px;height:140px;background:#ffd36b;right:30%;top:40%;opacity:.25;animation-delay:-2s}
+.lg2-brand{position:relative;animation:rise .7s both}.lg2-logo{height:46px;background:#fff;padding:6px 12px;border-radius:14px;display:block}
+.lg2-brand small{display:block;margin-top:18px;letter-spacing:2px;font-weight:700;font-size:11px;opacity:.8}
+.lg2-brand h1{font-size:clamp(28px,5vw,48px);line-height:1.1;margin:10px 0}.lg2-brand h1 span{background:linear-gradient(90deg,#8cf0b4,#ffd36b);-webkit-background-clip:text;background-clip:text;color:transparent}
+.lg2-brand p{margin:0;opacity:.85;font-size:14px}
+.lg2-r{position:relative;padding:14px 16px calc(30px + env(safe-area-inset-bottom));display:flex;justify-content:center;align-items:flex-start}
+.lg2-card{width:100%;max-width:440px;background:#ffffffee;backdrop-filter:blur(20px);border-radius:28px;padding:26px 22px;box-shadow:0 30px 60px -20px #000b;animation:rise .7s .15s both}
+.lg2-card h2{margin:0;font-size:24px;color:var(--navy)}.lg2-card>p{margin:4px 0 6px;color:var(--mu);font-size:14px}
+.fl{position:relative;margin-top:14px}.fl input{padding:23px 14px 8px}.fl input#p{padding-right:68px}
+.fl label{position:absolute;left:15px;top:16px;margin:0;font-size:16px;font-weight:500;color:var(--mu);pointer-events:none;transition:.2s}
+.fl input:focus+label,.fl input:not(:placeholder-shown)+label,.fl input:-webkit-autofill+label{top:7px;font-size:11px;font-weight:700;color:var(--green)}
+#eye{position:absolute;right:8px;top:50%;transform:translateY(-50%);border:0;background:none;font-weight:700;color:var(--navy);cursor:pointer;padding:10px;font-family:inherit}
+.lg2-f{text-align:center;color:var(--mu);font-size:12px;margin-top:14px}
+.bsp{width:18px;height:18px;border:3px solid #fff6;border-top-color:#fff;border-radius:50%;animation:s .7s linear infinite}
+.shake{animation:shk .4s}@keyframes shk{20%,60%{transform:translateX(-8px)}40%,80%{transform:translateX(8px)}}
+@media(min-width:900px){.lg2{grid-template-columns:1.15fr 1fr}.lg2-l{display:flex;align-items:center;padding:56px}.lg2-r{align-items:center;background:#f3f6fb;padding:32px}.lg2-card{background:#fff;box-shadow:0 30px 70px -24px #14226b66;padding:34px 30px}}
+
+/* ===== inner v3: match login look ===== */
+body{background:linear-gradient(135deg,#0c1650,#14226b 50%,#0b5d34) fixed;color:var(--tx)}
+body::before{content:"";position:fixed;inset:0;background:var(--hero) center/cover;opacity:.12;mix-blend-mode:luminosity;pointer-events:none;z-index:-1}
+body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;background:radial-gradient(circle at 92% -4%,#d6202766 0,transparent 38%),radial-gradient(circle at 4% 104%,#1f9d5566 0,transparent 42%),radial-gradient(circle at 60% 50%,#ffd36b14 0,transparent 30%);animation:bgm 14s ease-in-out infinite alternate}
+@keyframes bgm{to{transform:scale(1.12) translate(-12px,10px)}}
+.top{background:#0c1650b0;backdrop-filter:saturate(1.6) blur(18px);border-bottom:1px solid #ffffff22}
+.top img{background:#fff;padding:4px 10px;border-radius:12px;height:40px}.who b{color:#fff}.xbtn{background:#ffffff22;color:#fff}
+main>h3{color:#fff;font-size:24px}main>p{color:#ffffffb8!important}.sec{color:#ffffffb0}.sec.red{color:#ff9a9a}
+.card{background:#ffffffee;backdrop-filter:blur(16px);border:1px solid #ffffff55}
+.hero2{background:linear-gradient(125deg,#ffffff24,#ffffff0d);border:1px solid #ffffff30;backdrop-filter:blur(16px);box-shadow:0 24px 50px -20px #000a}
+.hero2 h2{font-size:30px;line-height:1.1}.hero2 h2 span{background:linear-gradient(90deg,#8cf0b4,#ffd36b);-webkit-background-clip:text;background-clip:text;color:transparent}
+.item{background:#ffffffee;border:1px solid #ffffff55;backdrop-filter:blur(10px)}
+.lbc{border:1px solid #ffffff30}
+.nav{background:#0c1650cc;border:1px solid #ffffff2e;box-shadow:0 18px 40px -10px #000a}.nav button{color:#ffffffa6}.nav .on{color:#fff}.nav .on::after{background:#8cf0b4}.nav .fab{color:#fff}
+.btn.l{background:#ffffffee}
+.f2 .fl,.f2>div>label+input{margin-top:14px}.f2 .fl input{min-height:54px}
+</style></head><body>
 <header class="top"><img id="lg" alt="SELMEX"><div class="who hide" id="who"></div><button class="xbtn hide" id="lo" title="Sign out">⎋</button></header>
 <main id="m"><div class="sp"></div></main><nav class="nav hide" id="nav"></nav><div id="toast"></div>
 <script src="config.js"></script>
@@ -133,7 +172,7 @@ const spin='<div class="sp"></div>',COL=["#2749c9","#6a2cb5","#b25200","#c99a00"
 const HERO=`<div class="hero"><h2>Zak Doors &amp; Windows Expo</h2><p>SELMEX INDUSTRIES PVT. LTD. · Packaging &amp; Bonding Solutions</p><div class="pills"><span>📅 10–12 Dec 2026</span><span>📍 Yashobhoomi (IICC), New Delhi</span><span>🏢 Hall 2 · Stall DD7</span></div></div>`;
 const cnts=c=>STAGES.slice(0,5).map(([v])=>c.filter(x=>nz(x.lead_status)===v).length);
 const pipe=a=>{const T=a.reduce((x,y)=>x+y,0),t=T||1;return `<div class="card"><h3 style="font-size:16px">Pipeline · ${T} customers</h3><div class="pipe">${a.map((n,i)=>`<i style="--w:${n/t*100}%;background:${COL[i]}"></i>`).join("")}</div><div class="lgd">${a.map((n,i)=>`<span style="--c:${COL[i]}"><s></s>${STAGES[i][1]} <b>${n}</b></span>`).join("")}</div></div>`};
-const greet=()=>{const h=new Date().getHours(),g=h<12?"Good morning":h<17?"Good afternoon":"Good evening",d=Math.ceil((new Date("2026-12-10T00:00")-new Date())/864e5);return `<div class="hero2"><div class="blob b1"></div><div class="blob b2"></div><small>${d>0?"⏳ "+d+" days to expo":d>-3?"🔥 Expo is live":"✅ Expo wrapped up"}</small><h2>${g}, ${esc((me.full_name||"").split(" ")[0])} 👋</h2><p>Zak Doors &amp; Windows Expo · Hall 2, Stall DD7 · Yashobhoomi, Delhi</p></div>`};
+const greet=()=>{const h=new Date().getHours(),g=h<12?"Good morning":h<17?"Good afternoon":"Good evening",d=Math.ceil((new Date("2026-12-10T00:00")-new Date())/864e5);return `<div class="hero2"><div class="blob b1"></div><div class="blob b2"></div><small>${d>0?"⏳ "+d+" days to expo":d>-3?"🔥 Expo is live":"✅ Expo wrapped up"}</small><h2>${g},<br><span>${esc((me.full_name||"").split(" ")[0])}</span> 👋</h2><p>Zak Doors &amp; Windows Expo · Hall 2, Stall DD7 · Yashobhoomi, Delhi</p></div>`};
 function anim(){document.querySelectorAll("#m .stat,#m .item,#m .lbc,#m .card").forEach((e,i)=>e.style.setProperty("--d",Math.min(i,14)));
   document.querySelectorAll("#m [data-n]").forEach(e=>{const n=+e.dataset.n,t0=performance.now(),f=t=>{const p=Math.min(1,(t-t0)/900);e.textContent=Math.round(n*(1-Math.pow(1-p,3)));if(p<1)requestAnimationFrame(f)};requestAnimationFrame(f)})}
 document.addEventListener("pointerdown",e=>{const b=e.target.closest(".btn,.item,.step,.mic");if(!b)return;const r=b.getBoundingClientRect(),z=Math.max(r.width,r.height),p=document.createElement("span");p.className="rip";p.style.cssText=`width:${z}px;height:${z}px;left:${e.clientX-r.left-z/2}px;top:${e.clientY-r.top-z/2}px`;b.style.position=b.style.position||"relative";b.style.overflow="hidden";b.appendChild(p);setTimeout(()=>p.remove(),600)});
@@ -148,12 +187,19 @@ async function init(){
   const T=isAdm()?[["adm","📊","Dashboard"],["all","🗂️","All"],["up","📷","Scan"],["lb","⭐","Stars"]]:[["dash","🏠","Home"],["cus","👥","Customers"],["up","📷","Scan"],["fu","📅","Follow-ups"],["lb","⭐","Stars"]];
   $("#nav").innerHTML=T.map(t=>`<button data-p="${t[0]}" class="${t[0]==="up"?"fab":""}"><i>${t[1]}</i>${t[2]}</button>`).join("");
   $("#nav").onclick=e=>{const b=e.target.closest("button");if(b)go(b.dataset.p)};go(isAdm()?"adm":"dash")}
-function setUI(on){$("#who").classList.toggle("hide",!on);$("#lo").classList.toggle("hide",!on);$("#nav").classList.toggle("hide",!on);
+function setUI(on){document.body.classList.remove("lgn");$("#who").classList.toggle("hide",!on);$("#lo").classList.toggle("hide",!on);$("#nav").classList.toggle("hide",!on);
   if(on)$("#who").innerHTML=`<b>${esc(me.full_name)}</b><span class="badge ${isAdm()?"adm":""}">${isAdm()?"Management":"Salesperson"}</span>`}
 $("#lo").onclick=()=>out();
-function login(){setUI(false);M(`${HERO}<div class="card lg"><h3>Welcome 👋</h3><label>Email</label><input id="e" type="email" autocomplete="username"><label>Password</label><div style="position:relative"><input id="p" type="password" autocomplete="current-password" style="padding-right:64px"><button type="button" id="eye" style="position:absolute;right:8px;top:50%;transform:translateY(-50%);border:0;background:none;color:#1a2a6c;font-weight:600;cursor:pointer">Show</button></div><button class="btn r w" id="lgb">Login</button><div id="le" class="err"></div></div>`);
+function login(){setUI(false);document.body.classList.add("lgn");
+  M(`<div class="lg2"><div class="lg2-l"><div class="orb o1"></div><div class="orb o2"></div><div class="orb o3"></div><div class="lg2-brand"><img class="lg2-logo" src="${LOGO}" alt="SELMEX"><small>ZAK DOORS &amp; WINDOWS EXPO · 2026</small><h1>Capture every lead.<br><span>Close every deal.</span></h1><p>SELMEX INDUSTRIES PVT. LTD. · Packaging &amp; Bonding Solutions</p><div class="pills"><span>📅 10–12 Dec 2026</span><span>📍 Yashobhoomi (IICC), New Delhi</span><span>🏢 Hall 2 · Stall DD7</span></div></div></div>
+  <div class="lg2-r"><div class="lg2-card"><h2>Welcome back 👋</h2><p>Sign in to your Expo CRM</p>
+  <div class="fl"><input id="e" type="email" placeholder=" " autocomplete="username"><label for="e">Email</label></div>
+  <div class="fl"><input id="p" type="password" placeholder=" " autocomplete="current-password"><label for="p">Password</label><button type="button" id="eye">Show</button></div>
+  <button class="btn r w" id="lgb"><span>Login</span></button><div id="le" class="err"></div><div class="lg2-f">🔒 Secure team login</div></div></div></div>`);
   $("#eye").onclick=()=>{const p=$("#p"),h=p.type==="password";p.type=h?"text":"password";$("#eye").textContent=h?"Hide":"Show";p.focus()};
-  const go=async()=>{$("#lgb").disabled=true;const{error}=await sb.auth.signInWithPassword({email:$("#e").value.trim(),password:$("#p").value});if(error){$("#le").textContent=error.message;$("#lgb").disabled=false}else init()};
+  const go=async()=>{const b=$("#lgb");b.disabled=true;b.innerHTML='<span class="bsp"></span> Signing in…';$("#le").textContent="";
+    const{error}=await sb.auth.signInWithPassword({email:$("#e").value.trim(),password:$("#p").value});
+    if(error){$("#le").textContent=error.message;b.disabled=false;b.innerHTML="<span>Login</span>";const c=$(".lg2-card");c.classList.remove("shake");void c.offsetWidth;c.classList.add("shake")}else init()};
   $("#lgb").onclick=go;$("#p").onkeydown=e=>e.key==="Enter"&&go()}
 async function out(){await sb.auth.signOut();me=null;login()}
 function go(p){last=p;document.querySelectorAll(".nav button").forEach(b=>b.classList.toggle("on",b.dataset.p===p));M(spin);({dash,up,cus,fu,lb,adm,all})[p]()}
@@ -161,7 +207,7 @@ function go(p){last=p;document.querySelectorAll(".nav button").forEach(b=>b.clas
 async function dash(){
   const{data:c=[]}=await sb.from("expo_customers").select("id,customer_name,company_name,city,mobile,lead_status,next_followup_date,card_image_path").eq("salesperson_id",me.id).order("created_at",{ascending:false});
   const pend=c.filter(x=>x.next_followup_date&&x.next_followup_date<=today()&&!["Converted","Not Interested"].includes(x.lead_status)).length,n=s=>c.filter(x=>x.lead_status===s).length;
-  M(`${greet()}${pipe(cnts(c))}<div class="grid">${cnts(c).map((n,i)=>stat(STAGES[i][1],n)).join("")}</div>
+  M(`${greet()}<div class="grid">${cnts(c).map((n,i)=>stat(STAGES[i][1],n)).join("")}</div>
   <button class="btn r w" onclick="go('up')" style="font-size:18px;min-height:58px">📷 Scan Visiting Card</button><div class="sec">Recent cards</div>${c.slice(0,5).map(row).join("")||'<div class="card">No visitors yet. Tap Scan to add the first one.</div>'}`)}
 
 function tile(s,t,sub){const f=imgs[s];return `<div class="tile ${f?"has":""}" id="t-${s}">${f?`<img src="${f.url}"><div class="ov">`:`<div style="font-size:34px">${s==="front"?"🪪":"🔄"}</div><h4>${t}</h4><small>${sub}</small><div>`}<label class="mini o">📷 ${f?"Retake":"Camera"}<input type="file" accept="image/*" capture="environment" data-s="${s}"></label><label class="mini">🖼 Gallery<input type="file" accept="image/*" data-s="${s}"></label></div></div>`}
@@ -179,10 +225,10 @@ async function extract(){const st=$("#st"),bt=$("#ex");st.style.color="var(--nav
     if(!r.ok)throw new Error("Extraction failed ("+r.status+")");ext=await r.json();verify()}
   catch(e){st.style.color="var(--red)";st.innerHTML=`${esc(e.message)}. Retake the photo or <a href="#" onclick="ext={};verify();return false">enter details manually</a>.`;bt.disabled=false}}
 
-function form(c,pr){return `<div class="f2">${FIELDS.map(([k,l])=>`<div><label>${l}</label>${k==="industry"?`<select data-k="industry"><option value="">Select…</option>${INDUSTRIES.map(i=>`<option ${i===normInd(c.industry)?"selected":""}>${i}</option>`).join("")}</select>`:`<input data-k="${k}" value="${esc(c[k])}">`}</div>`).join("")}</div>
+function form(c,pr){return `<div class="f2">${FIELDS.map(([k,l])=>k==="industry"?`<div><label>${l}</label><select data-k="industry"><option value="">Select…</option>${INDUSTRIES.map(i=>`<option ${i===normInd(c.industry)?"selected":""}>${i}</option>`).join("")}</select></div>`:`<div class="fl"><input data-k="${k}" value="${esc(c[k])}" placeholder=" "><label>${l}</label></div>`).join("")}</div>
 <label>Interested products</label><div class="chips" id="pr">${PRODUCTS.map(p=>`<label><input type="checkbox" value="${p}" ${pr.includes(p)?"checked":""}><span>${p}</span></label>`).join("")}</div>
 <label>Customer requirements</label><textarea data-k="requirements" rows="2">${esc(c.requirements)}</textarea>${mic('[data-k="requirements"]')}
-<div class="f2"><div><label>Estimated business potential</label><input data-k="business_potential" value="${esc(c.business_potential)}"></div><div><label>Lead status</label><select data-k="lead_status">${STAGES.map(([v,l])=>`<option value="${v}" ${v===nz(c.lead_status||"Interested")?"selected":""}>${l}</option>`).join("")}</select></div><div><label>Next follow-up date</label><input type="date" data-k="next_followup_date" value="${c.next_followup_date||""}"></div></div>
+<div class="f2"><div class="fl"><input data-k="business_potential" value="${esc(c.business_potential)}" placeholder=" "><label>Estimated business potential</label></div><div><label>Lead status</label><select data-k="lead_status">${STAGES.map(([v,l])=>`<option value="${v}" ${v===nz(c.lead_status||"Interested")?"selected":""}>${l}</option>`).join("")}</select></div><div><label>Next follow-up date</label><input type="date" data-k="next_followup_date" value="${c.next_followup_date||""}"></div></div>
 <label>Remarks</label><textarea data-k="remarks" rows="3">${esc(c.remarks)}</textarea>${mic('[data-k="remarks"]')}`}
 const read=()=>{const o={};document.querySelectorAll("[data-k]").forEach(e=>o[e.dataset.k]=e.value.trim()||null);return o},prods=()=>[...document.querySelectorAll("#pr input:checked")].map(x=>x.value);
 
@@ -241,7 +287,7 @@ async function fu(){const{data=[]}=await sb.from("expo_customers").select("id,cu
 async function lb(){let{data=[]}=await sb.rpc("expo_leaderboard");
   const ORD=["nitish","hanumant","manjeet","preeti"],pos=n=>{const i=ORD.findIndex(k=>String(n).toLowerCase().includes(k));return i<0?99:i},mx=Math.max(1,...data.map(r=>+r.total)),md=["🥇","🥈","🥉"];
   data=data.filter(r=>pos(r.full_name)<99).sort((x,y)=>pos(x.full_name)-pos(y.full_name));
-  M(`<h3>⭐ Star Performers</h3><p style="color:var(--mu);font-size:13px;margin:-4px 0 12px">SELMEX Expo team · only totals are shown, customer details stay private.</p><div class="lbs">${data.map((r,i)=>`<div class="lbc t${Math.min(i,3)} ${r.full_name===me.full_name?"me":""}"><div class="pos">${md[i]||i+1}</div><div class="av">${esc(r.full_name.charAt(0).toUpperCase())}</div><div class="mid"><b>${esc(r.full_name)}${r.full_name===me.full_name?" (you)":""}</b><small>${r.total} customers collected</small><div class="meter"><i style="width:${Math.max(4,r.total/mx*100)}%"></i></div></div><div class="st3"><div><b>${r.total}</b>Customers</div><div><b>${r.interested}</b>Active leads</div><div><b>${r.converted}</b>Orders won</div></div></div>`).join("")||'<div class="card">No data yet.</div>'}</div>`)}
+  M(`<div class="lbs"><h3>⭐ Star Performers</h3><p style="color:var(--mu);font-size:13px;margin:-4px 0 12px">SELMEX Expo team · only totals are shown, customer details stay private.</p>${data.map((r,i)=>`<div class="lbc t${Math.min(i,3)} ${r.full_name===me.full_name?"me":""}"><div class="pos">${md[i]||i+1}</div><div class="av">${esc(r.full_name.charAt(0).toUpperCase())}</div><div class="mid"><b>${esc(r.full_name)}${r.full_name===me.full_name?" (you)":""}</b><small>${r.total} customers collected</small><div class="meter"><i style="width:${Math.max(4,r.total/mx*100)}%"></i></div></div><div class="st3"><div><b>${r.total}</b>Customers</div><div><b>${r.interested}</b>Active leads</div><div><b>${r.converted}</b>Orders won</div></div></div>`).join("")||'<div class="card">No data yet.</div>'}</div>`)}
 
 async function adm(){const[{data:c0=[]},{data:pr0=[]},{data:l0=[]},{data:sp=[]}]=await Promise.all([sb.from("expo_customers").select("id,salesperson_id,lead_status,city,industry,next_followup_date,card_image_path"),sb.from("expo_customer_products").select("customer_id,product"),sb.rpc("expo_leaderboard"),sb.from("expo_salespeople").select("id").eq("show_on_leaderboard",true)]);
   const ok=new Set(sp.map(x=>x.id)),c=c0.filter(x=>ok.has(x.salesperson_id)),cid=new Set(c.map(x=>x.id)),pr=pr0.filter(x=>cid.has(x.customer_id)),LBO=["nitish","hanumant","manjeet","preeti"],l=l0.filter(r=>LBO.some(k=>String(r.full_name).toLowerCase().includes(k)));
@@ -249,7 +295,7 @@ async function adm(){const[{data:c0=[]},{data:pr0=[]},{data:l0=[]},{data:sp=[]}]
   box=(t,r,n=6)=>{const mx=r[0]?r[0][1]:1,bar=x=>`<div class="bar2">${esc(x[0])} <b style="float:right">${x[1]}</b><div style="--w:${Math.max(6,x[1]/mx*100)}%"></div></div>`;
     return `<div class="card"><h3 style="font-size:16px">${t}</h3>${r.slice(0,n).map(bar).join("")||"<small>No data yet</small>"}${r.length>n?`<div class="hide">${r.slice(n).map(bar).join("")}</div><button class="btn l w" style="min-height:42px" onclick="const d=this.previousElementSibling;d.classList.toggle('hide');this.textContent=d.classList.contains('hide')?'Show all (${r.length})':'Show less'">Show all (${r.length})</button>`:""}</div>`},
   city=x=>(x.city||"").trim().toLowerCase().replace(/\b\w/g,m=>m.toUpperCase());
-  M(`${greet()}${pipe(cnts(c))}<div class="grid">${cnts(c).map((n,i)=>stat(STAGES[i][1],n)).join("")}</div>
+  M(`${greet()}<div class="grid">${cnts(c).map((n,i)=>stat(STAGES[i][1],n)).join("")}</div>
   <div class="cols">${box("Salesperson-wise customers",l.map(r=>[r.full_name,r.total]))}${box("Product-wise interest",cnt(pr,x=>x.product))}${box("Industry-wise",cnt(c,x=>normInd(x.industry)))}${box("City-wise",cnt(c,city))}</div>`)}
 
 
