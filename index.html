@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SELMEX Expo CRM</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<style>
+:root{--navy:#1b2a6b;--red:#d3202a;--green:#1f9d55;--dg:#0d5c33;--cream:#efe8dc;--bg:#f6f3ec;--tx:#14182e}
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,Segoe UI,Arial,sans-serif;background:var(--bg);color:var(--tx)}
+header{background:linear-gradient(120deg,#fff 0,#fff 38%,#e6f4ea 100%);border-bottom:4px solid var(--green);padding:10px 14px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.brand b{display:block;font-size:14px;color:var(--navy)}.brand i{font-size:12px;color:var(--red)}
+.exp{margin-left:auto;background:linear-gradient(120deg,var(--dg),var(--green));color:#fff;padding:8px 12px;border-radius:8px;font-size:12px;line-height:1.35}
+.exp b{font-size:13px;letter-spacing:.5px}
+nav{display:flex;gap:6px;overflow-x:auto;background:var(--navy);padding:8px}
+nav button{background:none;border:0;color:#fff;padding:9px 13px;border-radius:6px;white-space:nowrap;font-size:14px}
+nav button.on{background:var(--red)}
+main{max-width:1000px;margin:auto;padding:14px}
+.card{background:#fff;border-radius:10px;padding:14px;margin-bottom:12px;box-shadow:0 1px 4px #0002}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px}
+.stat{background:#fff;border-left:5px solid var(--green);border-radius:8px;padding:12px}.stat b{font-size:26px;color:var(--navy);display:block}
+label{font-size:12px;color:#555;display:block;margin-top:8px}
+input,select,textarea{width:100%;padding:10px;border:1px solid #bbb;border-radius:6px;font-size:15px}
+.btn{background:var(--navy);color:#fff;border:0;padding:12px 16px;border-radius:8px;font-size:15px;margin-top:10px;cursor:pointer}
+.btn.r{background:var(--red)}.btn.g{background:var(--green)}
+table{width:100%;border-collapse:collapse;font-size:13px}th{background:var(--navy);color:#fff;text-align:left}th,td{padding:7px;border-bottom:1px solid #ddd}
+tr.cl{cursor:pointer}.err{color:var(--red)}.warn{background:#fff3cd;padding:10px;border-radius:6px;margin-top:8px}
+.f2{display:grid;grid-template-columns:1fr 1fr;gap:0 10px}.chips label{display:inline-flex;gap:4px;align-items:center;margin:4px 8px 0 0;font-size:13px;color:#000}.chips input{width:auto}
+img.pv{max-width:100%;border-radius:8px;margin-top:8px}
+</style></head><body>
+<header>
+<svg width="120" height="52" viewBox="0 0 240 104" aria-label="SELMEX"><path d="M30 8h180q26 0 26 44t-26 44H30Q4 96 4 52T30 8z" fill="#fff" stroke="#2b3a9a" stroke-width="5"/><path d="M36 20h168q16 0 16 32t-16 32H36Q20 84 20 52t16-32z" fill="none" stroke="#2b3a9a" stroke-width="3"/><text x="120" y="68" text-anchor="middle" font-family="Georgia,serif" font-weight="900" font-size="44" fill="#d3202a">SELMEX</text></svg>
+<div class="brand"><b>SELMEX INDUSTRIES PVT. LTD.</b><i>Packaging &amp; Bonding Solutions</i></div>
+<div class="exp"><b>ZAK DOORS &amp; WINDOWS EXPO</b><br>10–12 Dec 2026 · Yashobhoomi (IICC), New Delhi<br>Hall 2 · Stall DD7</div>
+</header>
+<nav id="nav"></nav><main id="m"></main>
+<script>
+// ===== CONFIG: fill these (anon key only; NEVER the service_role key) =====
+const SUPABASE_URL="https://YOUR-PROJECT.supabase.co", SUPABASE_ANON_KEY="YOUR_ANON_KEY";
+const N8N_EXTRACT_URL=SUPABASE_URL+"/functions/v1/expo-extract"; // Supabase Edge Function (holds the Gemini key)
+// ==========================================================================
+const sb=supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
+const PRODUCTS=["BOPP Adhesive Tape","Customized Printed BOPP Tape","Cross Filament Tape","Kraft Paper Tape","Masking Tape","EVA Tape","Acrylic Foam Tape","Double Side PET Tape","Tissue Double Side Tape","PVC Floor Marking Tape","Bubble Packaging","EPE Packaging","PE Bags","Other Products"];
+const STATUS=["New","Contacted","Interested","Follow-up Required","Quotation Sent","Negotiation","Converted","Not Interested"];
+const FIELDS=[["customer_name","Full name"],["company_name","Company"],["designation","Designation"],["mobile","Mobile"],["alternate_mobile","Alt. mobile / WhatsApp"],["email","Email"],["website","Website"],["address","Address"],["city","City"],["state","State"],["country","Country"],["industry","Industry"],["customer_type","Customer type"]];
+const $=s=>document.querySelector(s),esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+let me=null,blob=null,ext={};
+const today=()=>new Date().toISOString().slice(0,10);
+
+async function init(){
+  const{data:{session}}=await sb.auth.getSession();
+  if(!session)return login();
+  const{data}=await sb.from("expo_salespeople").select("*").eq("id",session.user.id).maybeSingle();
+  if(!data||!data.active){$("#nav").innerHTML="";$("#m").innerHTML='<div class="card err">Your account is not registered for the Expo CRM. Ask admin to add you.</div><button class="btn" onclick="out()">Sign out</button>';return}
+  me=data;const t=[["dash","Dashboard"],["up","Upload Card"],["cus","My Customers"],["fu","Follow-ups"],["lb","Leaderboard"]];
+  if(me.role==="admin")t.push(["adm","Admin"],["all","All Customers"],["emp","Employees"]);
+  t.push(["out","Sign out"]);
+  $("#nav").innerHTML=t.map(x=>`<button data-p="${x[0]}">${x[1]}</button>`).join("");
+  $("#nav").onclick=e=>{const p=e.target.dataset.p;if(p)go(p)};go("dash");
+}
+function login(){$("#nav").innerHTML="";$("#m").innerHTML=`<div class="card" style="max-width:380px;margin:20px auto"><h3 style="color:var(--navy)">Salesperson Login</h3><label>Email</label><input id="e" type="email"><label>Password</label><input id="p" type="password"><button class="btn r" id="lg" style="width:100%">Login</button><div id="le" class="err"></div></div>`;
+  $("#lg").onclick=async()=>{const{error}=await sb.auth.signInWithPassword({email:$("#e").value,password:$("#p").value});error?$("#le").textContent=error.message:init()}}
+async function out(){await sb.auth.signOut();me=null;login()}
+function go(p){if(p==="out")return out();document.querySelectorAll("nav button").forEach(b=>b.classList.toggle("on",b.dataset.p===p));({dash,up,cus,fu,lb,adm,all,emp})[p]()}
+const M=h=>$("#m").innerHTML=h;
+const stat=(n,v)=>`<div class="stat"><b>${v}</b>${n}</div>`;
+
+async function dash(){
+  const{data:c=[]}=await sb.from("expo_customers").select("lead_status,next_followup_date,card_image_path").eq("salesperson_id",me.id);
+  const pend=c.filter(x=>x.next_followup_date&&x.next_followup_date<=today()&&!["Converted","Not Interested"].includes(x.lead_status)).length;
+  M(`<h3>Welcome, ${esc(me.full_name)}</h3><div class="grid">${stat("My Total Visitors",c.length)}${stat("Cards Uploaded",c.filter(x=>x.card_image_path).length)}${stat("My New Leads",c.filter(x=>x.lead_status==="New").length)}${stat("My Interested",c.filter(x=>x.lead_status==="Interested").length)}${stat("My Converted",c.filter(x=>x.lead_status==="Converted").length)}${stat("Pending Follow-ups",pend)}</div><button class="btn r" onclick="go('up')" style="width:100%;font-size:18px">📷 Scan Visiting Card</button>`)}
+
+function up(){blob=null;M(`<div class="card"><h3>Upload Visiting Card</h3><input type="file" id="f" accept="image/*" capture="environment"><p style="font-size:12px">Camera or gallery. Image is compressed before sending.</p><div id="pv"></div><button class="btn g" id="ex" disabled>Extract with AI</button><div id="st"></div></div>`);
+  $("#f").onchange=async e=>{const f=e.target.files[0];if(!f)return;blob=await compress(f);$("#pv").innerHTML=`<img class="pv" src="${URL.createObjectURL(blob)}">`;$("#ex").disabled=false};
+  $("#ex").onclick=extract}
+function compress(f){return new Promise(r=>{const i=new Image();i.onload=()=>{const s=Math.min(1,1400/Math.max(i.width,i.height)),c=document.createElement("canvas");c.width=i.width*s;c.height=i.height*s;c.getContext("2d").drawImage(i,0,0,c.width,c.height);c.toBlob(r,"image/jpeg",.8)};i.src=URL.createObjectURL(f)})}
+const b64=b=>new Promise(r=>{const fr=new FileReader();fr.onload=()=>r(fr.result.split(",")[1]);fr.readAsDataURL(b)});
+async function extract(){
+  $("#st").textContent="Reading card…";$("#ex").disabled=true;
+  try{const{data:{session}}=await sb.auth.getSession();
+    const r=await fetch(N8N_EXTRACT_URL,{method:"POST",headers:{"Content-Type":"application/json",Authorization:"Bearer "+session.access_token,apikey:SUPABASE_ANON_KEY},body:JSON.stringify({image:await b64(blob),mime:"image/jpeg"})});
+    if(!r.ok)throw new Error("Extraction failed ("+r.status+")");ext=await r.json();verify()}
+  catch(e){$("#st").innerHTML=`<span class="err">${esc(e.message)}. Retake the photo or fill the form manually.</span> <button class="btn" onclick="ext={};verify()">Enter manually</button>`;$("#ex").disabled=false}}
+
+function form(c,prods){return `<div class="f2">${FIELDS.map(([k,l])=>`<div><label>${l}</label><input data-k="${k}" value="${esc(c[k])}"></div>`).join("")}</div>
+<label>Interested products</label><div class="chips" id="pr">${PRODUCTS.map(p=>`<label><input type="checkbox" value="${p}" ${prods.includes(p)?"checked":""}>${p}</label>`).join("")}</div>
+<label>Customer requirements</label><textarea data-k="requirements">${esc(c.requirements)}</textarea>
+<div class="f2"><div><label>Estimated business potential</label><input data-k="business_potential" value="${esc(c.business_potential)}"></div>
+<div><label>Lead status</label><select data-k="lead_status">${STATUS.map(s=>`<option ${s===(c.lead_status||"New")?"selected":""}>${s}</option>`).join("")}</select></div>
+<div><label>Next follow-up date</label><input type="date" data-k="next_followup_date" value="${c.next_followup_date||""}"></div></div>
+<label>Remarks</label><textarea data-k="remarks">${esc(c.remarks)}</textarea>`}
+function read(){const o={};document.querySelectorAll("[data-k]").forEach(e=>o[e.dataset.k]=e.value.trim()||null);return o}
+const prods=()=>[...document.querySelectorAll("#pr input:checked")].map(x=>x.value);
+
+async function verify(){
+  M(`<div class="card"><h3>Verify Details</h3>${blob?`<img class="pv" style="max-height:180px" src="${URL.createObjectURL(blob)}">`:""}<div id="dp"></div>${form(ext,[])}<button class="btn g" id="sv">Confirm &amp; Save</button><div id="st"></div></div>`);
+  const{data:n}=await sb.rpc("expo_check_duplicate",{p_mobile:ext.mobile||"",p_email:ext.email||"",p_company:ext.company_name||""});
+  if(n>0)$("#dp").innerHTML=`<div class="warn">⚠ Possible duplicate: this mobile/email/company already exists in the Expo database. Admin will review. You can still save.</div>`;
+  $("#sv").onclick=async()=>{const v=read(),btn=$("#sv");btn.disabled=true;let path=null;
+    if(blob){path=`${me.id}/${crypto.randomUUID()}.jpg`;const{error}=await sb.storage.from("expo-cards").upload(path,blob,{contentType:"image/jpeg"});if(error){$("#st").innerHTML=`<span class="err">${esc(error.message)}</span>`;btn.disabled=false;return}}
+    const{data,error}=await sb.from("expo_customers").insert({...v,card_image_path:path}).select("id").single(); // salesperson_id set by DB default = auth.uid()
+    if(error){$("#st").innerHTML=`<span class="err">${esc(error.message)}</span>`;btn.disabled=false;return}
+    const p=prods();if(p.length)await sb.from("expo_customer_products").insert(p.map(x=>({customer_id:data.id,product:x})));
+    if(v.next_followup_date)await sb.from("expo_followups").insert({customer_id:data.id,due_date:v.next_followup_date,note:v.remarks});
+    go("cus")}}
+
+let page=0;
+async function cus(){M(`<input id="q" placeholder="Search name, company, mobile…"><select id="fs" style="margin-top:6px"><option value="">All statuses</option>${STATUS.map(s=>`<option>${s}</option>`).join("")}</select><div id="ls"></div>`);
+  $("#q").oninput=()=>{page=0;list("ls",me.id)};$("#fs").onchange=()=>{page=0;list("ls",me.id)};page=0;list("ls",me.id)}
+async function list(el,uid){
+  let q=sb.from("expo_customers").select("id,customer_name,company_name,mobile,lead_status,city,industry,salesperson_id,expo_salespeople(full_name)",{count:"exact"}).order("created_at",{ascending:false}).range(page*25,page*25+24);
+  if(uid)q=q.eq("salesperson_id",uid);const s=($("#q")?.value||"").replace(/[,()%]/g,""),f=$("#fs")?.value;
+  if(s)q=q.or(`customer_name.ilike.%${s}%,company_name.ilike.%${s}%,mobile.ilike.%${s}%`);if(f)q=q.eq("lead_status",f);
+  const{data=[],count}=await q;
+  $("#"+el).innerHTML=`<div class="card" style="overflow-x:auto"><table><tr><th>Name</th><th>Company</th><th>Mobile</th><th>Status</th>${uid?"":"<th>By</th>"}</tr>${data.map(c=>`<tr class="cl" onclick="detail('${c.id}')"><td>${esc(c.customer_name)}</td><td>${esc(c.company_name)}</td><td>${esc(c.mobile)}</td><td>${c.lead_status}</td>${uid?"":`<td>${esc(c.expo_salespeople?.full_name)}</td>`}</tr>`).join("")}</table>
+  <button class="btn" ${page?"":"disabled"} onclick="page--;list('${el}',${uid?`'${uid}'`:"null"})">‹ Prev</button> <button class="btn" ${(page+1)*25>=count?"disabled":""} onclick="page++;list('${el}',${uid?`'${uid}'`:"null"})">Next ›</button> ${count} total</div>`}
+async function detail(id){
+  const{data:c}=await sb.from("expo_customers").select("*").eq("id",id).single();
+  const{data:p=[]}=await sb.from("expo_customer_products").select("product").eq("customer_id",id);
+  let img="";if(c.card_image_path){const{data:u}=await sb.storage.from("expo-cards").createSignedUrl(c.card_image_path,300);if(u)img=`<img class="pv" style="max-height:220px" src="${u.signedUrl}">`}
+  M(`<div class="card"><button class="btn" onclick="go('cus')">‹ Back</button><h3>${esc(c.customer_name)}</h3>${img}${form(c,p.map(x=>x.product))}<button class="btn g" id="sv">Save changes</button> <span id="st"></span></div>`);
+  $("#sv").onclick=async()=>{const v=read();const{error}=await sb.from("expo_customers").update(v).eq("id",id);
+    if(!error){await sb.from("expo_customer_products").delete().eq("customer_id",id);const pr=prods();if(pr.length)await sb.from("expo_customer_products").insert(pr.map(x=>({customer_id:id,product:x})))}
+    $("#st").textContent=error?error.message:"Saved ✓"}}
+
+async function fu(){const{data=[]}=await sb.from("expo_customers").select("id,customer_name,company_name,mobile,next_followup_date,lead_status").eq("salesperson_id",me.id).not("next_followup_date","is",null).order("next_followup_date");
+  M(`<div class="card"><h3>My Follow-ups</h3><table><tr><th>Date</th><th>Customer</th><th>Mobile</th><th>Status</th></tr>${data.map(c=>`<tr class="cl" onclick="detail('${c.id}')" style="${c.next_followup_date<=today()?"color:var(--red);font-weight:600":""}"><td>${c.next_followup_date}</td><td>${esc(c.customer_name)} · ${esc(c.company_name)}</td><td>${esc(c.mobile)}</td><td>${c.lead_status}</td></tr>`).join("")}</table></div>`)}
+
+async function lb(){const{data=[]}=await sb.rpc("expo_leaderboard");
+  M(`<div class="card"><h3>🏆 Salesperson Leaderboard</h3><table><tr><th>#</th><th>Name</th><th>Customers</th><th>Interested</th><th>Converted</th></tr>${data.map(r=>`<tr><td>${r.rank}</td><td>${esc(r.full_name)}${r.full_name===me.full_name?" (you)":""}</td><td>${r.total}</td><td>${r.interested}</td><td>${r.converted}</td></tr>`).join("")}</table></div>`)}
+
+async function adm(){const{data:c=[]}=await sb.from("expo_customers").select("lead_status,city,industry,next_followup_date,card_image_path");
+  const{data:pr=[]}=await sb.from("expo_customer_products").select("product");
+  const cnt=(a,f)=>Object.entries(a.reduce((o,x)=>{const k=f(x)||"—";o[k]=(o[k]||0)+1;return o},{})).sort((a,b)=>b[1]-a[1]).slice(0,8);
+  const box=(t,r)=>`<div class="card"><b>${t}</b><table>${r.map(x=>`<tr><td>${esc(x[0])}</td><td>${x[1]}</td></tr>`).join("")}</table></div>`;
+  const{data:lbd=[]}=await sb.rpc("expo_leaderboard");
+  M(`<div class="grid">${stat("Registered Customers",c.length)}${stat("Cards Uploaded",c.filter(x=>x.card_image_path).length)}${stat("Interested",c.filter(x=>x.lead_status==="Interested").length)}${stat("Converted",c.filter(x=>x.lead_status==="Converted").length)}${stat("Follow-ups Pending",c.filter(x=>x.next_followup_date&&x.next_followup_date<=today()).length)}</div>
+  <div class="card"><b>Salesperson-wise</b><table>${lbd.map(r=>`<tr><td>${esc(r.full_name)}</td><td>${r.total}</td><td>${r.converted} conv.</td></tr>`).join("")}</table></div>
+  ${box("Product-wise interest",cnt(pr,x=>x.product))}${box("Industry-wise",cnt(c,x=>x.industry))}${box("City-wise",cnt(c,x=>x.city))}`)}
+
+async function all(){M(`<input id="q" placeholder="Search…"><select id="fs" style="margin-top:6px"><option value="">All statuses</option>${STATUS.map(s=>`<option>${s}</option>`).join("")}</select><button class="btn" id="csv">⬇ Export CSV</button><div id="ls"></div>`);
+  $("#q").oninput=()=>{page=0;list("ls",null)};$("#fs").onchange=()=>{page=0;list("ls",null)};page=0;list("ls",null);
+  $("#csv").onclick=async()=>{const{data=[]}=await sb.from("expo_customers").select("*").order("created_at").limit(5000);if(!data.length)return;
+    const k=Object.keys(data[0]),q=v=>`"${String(v??"").replace(/"/g,'""')}"`;
+    const a=document.createElement("a");a.href=URL.createObjectURL(new Blob(["\ufeff"+[k.join(","),...data.map(r=>k.map(x=>q(r[x])).join(","))].join("\n")],{type:"text/csv"}));a.download="selmex_expo_customers.csv";a.click()}}
+
+async function emp(){const{data=[]}=await sb.from("expo_salespeople").select("*").order("created_at");
+  M(`<div class="card"><h3>Employees</h3><table><tr><th>Name</th><th>Role</th><th>Active</th></tr>${data.map(s=>`<tr><td>${esc(s.full_name)}</td><td><select onchange="upd('${s.id}',{role:this.value})"><option ${s.role==="salesperson"?"selected":""}>salesperson</option><option ${s.role==="admin"?"selected":""}>admin</option></select></td><td><input type="checkbox" style="width:auto" ${s.active?"checked":""} onchange="upd('${s.id}',{active:this.checked})"></td></tr>`).join("")}</table></div>
+  <div class="card"><b>Add employee</b><p style="font-size:12px">First create the login in Supabase Auth → Users, then paste the user UUID.</p><label>Auth user UUID</label><input id="u"><label>Full name</label><input id="n"><button class="btn g" id="ad">Add salesperson</button><div id="st"></div></div>`);
+  $("#ad").onclick=async()=>{const{error}=await sb.from("expo_salespeople").insert({id:$("#u").value.trim(),full_name:$("#n").value.trim()});error?$("#st").innerHTML=`<span class="err">${esc(error.message)}</span>`:emp()}}
+async function upd(id,v){const{error}=await sb.from("expo_salespeople").update(v).eq("id",id);if(error)alert(error.message)}
+init();
+</script></body></html>
