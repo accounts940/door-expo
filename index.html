@@ -237,8 +237,7 @@ async function verify(){ext.industry=normInd(ext.industry)||null;
   const{data:n}=await sb.rpc("expo_check_duplicate",{p_mobile:ext.mobile||"",p_email:ext.email||"",p_company:ext.company_name||""});
   if(n>0)$("#dp").innerHTML=`<div class="warn">⚠️ Possible duplicate: this mobile, email or company already exists in the Expo database. Management will review it. You can still save.</div>`;
   $("#sv").onclick=async()=>{const v=read(),bt=$("#sv");bt.disabled=true;const P={};
-    for(const s of ["front","back"])if(imgs[s]){const path=`${me.id}/${crypto.randomUUID()}_${s}.jpg`,{error}=await sb.storage.from("expo-cards").upload(path,imgs[s].blob,{contentType:"image/jpeg"});if(error){toast(error.message,1);bt.disabled=false;return}P[s]=path}
-    const{data,error}=await sb.from("expo_customers").insert({...v,card_image_path:P.front||null,card_back_path:P.back||null}).select("id").single();
+    const{data,error}=await sb.from("expo_customers").insert({...v,card_image_path:null,card_back_path:null}).select("id").single();
     if(error){toast(error.message,1);bt.disabled=false;return}
     const p=prods();if(p.length)await sb.from("expo_customer_products").insert(p.map(x=>({customer_id:data.id,product:x})));
     if(v.next_followup_date)await sb.from("expo_followups").insert({customer_id:data.id,due_date:v.next_followup_date,note:v.remarks});
