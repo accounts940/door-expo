@@ -76,7 +76,32 @@ html{-webkit-text-size-adjust:100%}button,a,input,select,textarea{touch-action:m
 .nav button{min-height:60px;font-size:12px}.nav i{font-size:25px}.hero{padding:28px}.hero h2{font-size:28px}.hero p{font-size:15px}.stat{padding:18px}.stat b{font-size:34px}.stat span{font-size:13px}.item{padding:14px}.btn{min-height:54px}}
 @media(min-width:1100px){.lgrid{grid-template-columns:1fr 1fr 1fr}}
 .vrow{display:flex;gap:8px;margin:6px 0 0}.mic,.micl{border:0;background:#eef1f6;color:var(--navy);border-radius:20px;padding:0 14px;min-height:40px;font-weight:700;font-size:13px;font-family:inherit;cursor:pointer}.mic.on{background:var(--red);color:#fff;animation:pl 1s infinite}@keyframes pl{50%{opacity:.65}}
-</style></head><body>
+
+/* ===== v2 modern theme ===== */
+html{scroll-behavior:smooth;overscroll-behavior-y:none}body{background:linear-gradient(180deg,#e9eeff 0,#f3f6f4 340px) fixed}
+.top{background:#ffffffb8;backdrop-filter:saturate(1.6) blur(18px);border-bottom:1px solid #ffffffa0}
+.card,.stat,.item,.lbc{animation:rise .55s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(var(--d,0)*55ms)}
+@keyframes rise{from{opacity:0;transform:translateY(18px) scale(.98)}to{opacity:1;transform:none}}
+.card{border-radius:24px;box-shadow:0 1px 2px #14226b0d,0 14px 34px -14px #14226b40;border:1px solid #ffffffb0}
+.item{border-radius:20px;border:1px solid #edf0f7;position:relative;overflow:hidden;content-visibility:auto;contain-intrinsic-size:76px}
+.btn,.item,.step,.mic,.nav button{transition:transform .18s cubic-bezier(.2,.8,.2,1),box-shadow .25s,background .25s}
+.btn:active,.item:active,.step:active{transform:scale(.96)}
+@media(hover:hover){.item:hover{transform:translateY(-3px);box-shadow:0 14px 28px -12px #14226b55}.btn:hover{box-shadow:0 10px 22px -8px #14226b66;transform:translateY(-1px)}}
+.hero2{position:relative;overflow:hidden;border-radius:28px;padding:26px 22px;margin-bottom:14px;color:#fff;background:linear-gradient(125deg,#0c1650,#14226b 45%,#0b5d34);box-shadow:0 20px 42px -16px #14226b99;animation:rise .6s both}
+.hero2 small{position:relative;display:inline-block;background:#ffffff26;padding:5px 12px;border-radius:20px;font-weight:700;font-size:12px}.hero2 h2{position:relative;margin:12px 0 4px;font-size:27px}.hero2 p{position:relative;margin:0;opacity:.85;font-size:13px}
+.blob{position:absolute;border-radius:50%;filter:blur(32px);opacity:.55;animation:fl 9s ease-in-out infinite alternate}.b1{width:190px;height:190px;background:#d62027;right:-40px;top:-70px}.b2{width:170px;height:170px;background:#1f9d55;right:90px;bottom:-90px;animation-delay:-4s}@keyframes fl{to{transform:translate(-34px,24px) scale(1.25)}}
+.stat{position:relative;overflow:hidden;border-top:0!important;padding:16px;border-radius:22px;background:linear-gradient(160deg,#fff,color-mix(in srgb,var(--c) 8%,#fff));box-shadow:0 1px 2px #14226b0d,0 12px 28px -14px #14226b50}
+.stat .ic{width:40px;height:40px;border-radius:13px;display:grid;place-items:center;font-size:20px;background:color-mix(in srgb,var(--c) 15%,#fff);margin-bottom:10px}.stat b{font-size:36px;line-height:1;color:var(--c);font-variant-numeric:tabular-nums}.stat span{display:block;margin-top:4px;font-weight:600}
+.stat::after{content:"";position:absolute;left:0;bottom:0;height:4px;width:100%;background:var(--c)}
+.pipe{display:flex;height:16px;border-radius:10px;overflow:hidden;background:#eef1f6;margin:8px 0 12px}.pipe i{height:100%;width:0;animation:pw 1s cubic-bezier(.2,.8,.2,1) .3s forwards}@keyframes pw{to{width:var(--w)}}
+.lgd{display:flex;flex-wrap:wrap;gap:6px 14px}.lgd span{font-size:12px;font-weight:600;display:flex;align-items:center;gap:6px}.lgd s{width:10px;height:10px;border-radius:50%;background:var(--c)}
+.bar2 div{width:0!important;animation:pw2 .9s cubic-bezier(.2,.8,.2,1) .2s forwards}
+.nav{left:10px;right:10px;bottom:calc(10px + env(safe-area-inset-bottom));max-width:640px;border-radius:28px;background:#ffffffe6;backdrop-filter:saturate(1.6) blur(18px);border:1px solid #fff;box-shadow:0 18px 40px -10px #14226b55}
+.nav .on i{transform:translateY(-3px) scale(1.15)}.nav .on::after{content:"";width:5px;height:5px;border-radius:50%;background:var(--red)}
+.rip{position:absolute;border-radius:50%;background:#ffffff66;transform:scale(0);animation:rp .6s ease-out;pointer-events:none}.item .rip,.step .rip,.mic .rip,.btn.l .rip{background:#14226b22}@keyframes rp{to{transform:scale(2.6);opacity:0}}
+.mic.on{box-shadow:0 0 0 6px #d6202733}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}.pipe i{width:var(--w)!important}}
+@keyframes pw2{to{width:var(--w)!important}}</style></head><body>
 <header class="top"><img id="lg" alt="SELMEX"><div class="who hide" id="who"></div><button class="xbtn hide" id="lo" title="Sign out">⎋</button></header>
 <main id="m"><div class="sp"></div></main><nav class="nav hide" id="nav"></nav><div id="toast"></div>
 <script src="config.js"></script>
@@ -89,8 +114,9 @@ const sb=supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
 const PRODUCTS=["BOPP Adhesive Tape","Customized Printed BOPP Tape","Cross Filament Tape","Kraft Paper Tape","Masking Tape","EVA Tape","Acrylic Foam Tape","Double Side PET Tape","Tissue Double Side Tape","PVC Floor Marking Tape","Bubble Packaging","EPE Packaging","PE Bags","Other Products"];
 const STAGES=[["Interested","New / Lead Accepted"],["Quotation Sent","Quotation Given"],["Negotiation","Sampling Done"],["Follow-up Required","Follow-up"],["Converted","Order Won"],["Not Interested","Not Interested"]];
 const STATUS=STAGES.map(x=>x[0]),LBL=Object.fromEntries(STAGES);LBL.New=LBL.Interested;
-const nz=v=>v==="New"?"Interested":v;let VL="en-IN";
-const mic=sel=>`<div class="vrow"><button type="button" class="mic" data-t='${sel}'>🎤 Speak</button><button type="button" class="micl">${VL==="hi-IN"?"हिं":"EN"}</button></div>`;
+const nz=v=>v==="New"?"Interested":v;const DV=(()=>{const C={क:"k",ख:"kh",ग:"g",घ:"gh",ङ:"n",च:"ch",छ:"chh",ज:"j",झ:"jh",ञ:"n",ट:"t",ठ:"th",ड:"d",ढ:"dh",ण:"n",त:"t",थ:"th",द:"d",ध:"dh",न:"n",प:"p",फ:"f",ब:"b",भ:"bh",म:"m",य:"y",र:"r",ल:"l",व:"v",श:"sh",ष:"sh",स:"s",ह:"h",ळ:"l"},V={अ:"a",आ:"aa",इ:"i",ई:"ee",उ:"u",ऊ:"oo",ऋ:"ri",ए:"e",ऐ:"ai",ओ:"o",औ:"au",ऑ:"o"},M={"ा":"a","ि":"i","ी":"ee","ु":"u","ू":"oo","े":"e","ै":"ai","ो":"o","ौ":"au","ृ":"ri","ॉ":"o","ं":"n","ँ":"n","ः":"h"},S="ािीुूेैोौृॉ";
+return t=>t.replace(/[\u0900-\u097F]+/g,w=>{const a=[...w];let o="";for(let i=0;i<a.length;i++){const h=a[i],x=a[i+1];if(h==="़")continue;if(C[h]!==undefined){o+=C[h];if(x==="़")i++;const y=a[i+1];if(y==="्")i++;else if(!(y&&S.includes(y))&&i<a.length-1)o+="a"}else if(V[h])o+=V[h];else if(M[h]!==undefined)o+=M[h];else if(h==="।")o+="."}return o})})();
+const mic=sel=>`<div class="vrow"><button type="button" class="mic" data-t='${sel}'>🎤 Bolo (Hinglish)</button></div>`;
 const FIELDS=[["customer_name","Full name"],["company_name","Company"],["designation","Designation"],["mobile","Mobile"],["alternate_mobile","Alt. mobile / WhatsApp"],["email","Email"],["website","Website"],["address","Address"],["city","City"],["state","State"],["country","Country"],["industry","Industry"],["customer_type","Customer type"]];
 const INDUSTRIES=["Doors & Windows","Façade & Glass","Construction & Contractors","Builders & Real Estate","Interiors & Furniture","Packaging & Logistics","Manufacturing & Industrial","Dealer / Trader","Other"];
 const normInd=s=>{if(!s)return"";const t=String(s).toLowerCase(),m=[[/door|window|fenestr|upvc|alumin/,0],[/fa[cç]ade|glass|glaz|cladding|curtain/,1],[/construct|contract|civil|infra|engineer/,2],[/build|real ?estate|develop|propert/,3],[/interior|furniture|carpent|wood|modular|kitchen/,4],[/packag|logistic|courier|warehouse|carton|box/,5],[/manufactur|industr|factory|fabricat|machine|plastic|chemical/,6],[/dealer|trader|distribut|supplier|wholesal|retail|trading/,7]];for(const[r,i]of m)if(r.test(t))return INDUSTRIES[i];return"Other"};
@@ -102,9 +128,15 @@ const today=()=>new Date().toISOString().slice(0,10),isAdm=()=>me&&me.role==="ad
 let me=null,imgs={front:null,back:null},ext={},L={uid:null,page:0},last="dash";
 $("#lg").src=LOGO;
 const toast=(t,bad)=>{const e=$("#toast");e.textContent=t;e.className="show"+(bad?" bad":"");clearTimeout(toast.t);toast.t=setTimeout(()=>e.className="",3500)};
-const M=h=>{const m=$("#m");m.style.animation="none";void m.offsetHeight;m.style.animation="";m.innerHTML=h;scrollTo(0,0)};
-const spin='<div class="sp"></div>',stat=(n,v)=>`<div class="stat"><b>${v}</b><span>${n}</span></div>`;
+const M=h=>{const m=$("#m");m.style.animation="none";void m.offsetHeight;m.style.animation="";m.innerHTML=h;scrollTo(0,0);anim()};
+const spin='<div class="sp"></div>',COL=["#2749c9","#6a2cb5","#b25200","#c99a00","#1f9d55"],stat=(n,v)=>{const i=STAGES.findIndex(x=>x[1]===n);return `<div class="stat" style="--c:${COL[i]||"#14226b"}"><div class="ic">${["🆕","📄","🧪","🔔","🏆"][i]||"📊"}</div><b data-n="${v}">0</b><span>${n}</span></div>`};
 const HERO=`<div class="hero"><h2>Zak Doors &amp; Windows Expo</h2><p>SELMEX INDUSTRIES PVT. LTD. · Packaging &amp; Bonding Solutions</p><div class="pills"><span>📅 10–12 Dec 2026</span><span>📍 Yashobhoomi (IICC), New Delhi</span><span>🏢 Hall 2 · Stall DD7</span></div></div>`;
+const cnts=c=>STAGES.slice(0,5).map(([v])=>c.filter(x=>nz(x.lead_status)===v).length);
+const pipe=a=>{const T=a.reduce((x,y)=>x+y,0),t=T||1;return `<div class="card"><h3 style="font-size:16px">Pipeline · ${T} customers</h3><div class="pipe">${a.map((n,i)=>`<i style="--w:${n/t*100}%;background:${COL[i]}"></i>`).join("")}</div><div class="lgd">${a.map((n,i)=>`<span style="--c:${COL[i]}"><s></s>${STAGES[i][1]} <b>${n}</b></span>`).join("")}</div></div>`};
+const greet=()=>{const h=new Date().getHours(),g=h<12?"Good morning":h<17?"Good afternoon":"Good evening",d=Math.ceil((new Date("2026-12-10T00:00")-new Date())/864e5);return `<div class="hero2"><div class="blob b1"></div><div class="blob b2"></div><small>${d>0?"⏳ "+d+" days to expo":d>-3?"🔥 Expo is live":"✅ Expo wrapped up"}</small><h2>${g}, ${esc((me.full_name||"").split(" ")[0])} 👋</h2><p>Zak Doors &amp; Windows Expo · Hall 2, Stall DD7 · Yashobhoomi, Delhi</p></div>`};
+function anim(){document.querySelectorAll("#m .stat,#m .item,#m .lbc,#m .card").forEach((e,i)=>e.style.setProperty("--d",Math.min(i,14)));
+  document.querySelectorAll("#m [data-n]").forEach(e=>{const n=+e.dataset.n,t0=performance.now(),f=t=>{const p=Math.min(1,(t-t0)/900);e.textContent=Math.round(n*(1-Math.pow(1-p,3)));if(p<1)requestAnimationFrame(f)};requestAnimationFrame(f)})}
+document.addEventListener("pointerdown",e=>{const b=e.target.closest(".btn,.item,.step,.mic");if(!b)return;const r=b.getBoundingClientRect(),z=Math.max(r.width,r.height),p=document.createElement("span");p.className="rip";p.style.cssText=`width:${z}px;height:${z}px;left:${e.clientX-r.left-z/2}px;top:${e.clientY-r.top-z/2}px`;b.style.position=b.style.position||"relative";b.style.overflow="hidden";b.appendChild(p);setTimeout(()=>p.remove(),600)});
 const pill=s=>`<span class="pill s-${String(s).replace(/[^A-Za-z]/g,"")}">${esc(LBL[s]||s)}</span>`;
 const row=c=>`<div class="item" onclick="detail('${c.id}')"><div class="av">${esc((c.customer_name||c.company_name||"?").charAt(0).toUpperCase())}</div><div class="mid"><b>${esc(c.customer_name||"—")}</b><small>${esc(c.company_name||"")}${c.city?" · "+esc(c.city):""}</small>${c.expo_salespeople?`<small class="by">👤 ${esc(c.expo_salespeople.full_name)}</small>`:""}</div><div class="rt">${pill(c.lead_status)}<div style="display:flex;gap:6px">${waNum(c)?`<a class="call wa" href="${waLink(c)}" target="_blank" rel="noopener" onclick="event.stopPropagation()">💬</a>`:""}${c.mobile?`<a class="call" href="tel:${esc(c.mobile)}" onclick="event.stopPropagation()">📞</a>`:""}</div></div></div>`;
 
@@ -129,7 +161,7 @@ function go(p){last=p;document.querySelectorAll(".nav button").forEach(b=>b.clas
 async function dash(){
   const{data:c=[]}=await sb.from("expo_customers").select("id,customer_name,company_name,city,mobile,lead_status,next_followup_date,card_image_path").eq("salesperson_id",me.id).order("created_at",{ascending:false});
   const pend=c.filter(x=>x.next_followup_date&&x.next_followup_date<=today()&&!["Converted","Not Interested"].includes(x.lead_status)).length,n=s=>c.filter(x=>x.lead_status===s).length;
-  M(`${HERO}<div class="grid">${STAGES.slice(0,5).map(([v,l])=>stat(l,c.filter(x=>nz(x.lead_status)===v).length)).join("")}</div>
+  M(`${greet()}${pipe(cnts(c))}<div class="grid">${cnts(c).map((n,i)=>stat(STAGES[i][1],n)).join("")}</div>
   <button class="btn r w" onclick="go('up')" style="font-size:18px;min-height:58px">📷 Scan Visiting Card</button><div class="sec">Recent cards</div>${c.slice(0,5).map(row).join("")||'<div class="card">No visitors yet. Tap Scan to add the first one.</div>'}`)}
 
 function tile(s,t,sub){const f=imgs[s];return `<div class="tile ${f?"has":""}" id="t-${s}">${f?`<img src="${f.url}"><div class="ov">`:`<div style="font-size:34px">${s==="front"?"🪪":"🔄"}</div><h4>${t}</h4><small>${sub}</small><div>`}<label class="mini o">📷 ${f?"Retake":"Camera"}<input type="file" accept="image/*" capture="environment" data-s="${s}"></label><label class="mini">🖼 Gallery<input type="file" accept="image/*" data-s="${s}"></label></div></div>`}
@@ -214,20 +246,19 @@ async function lb(){let{data=[]}=await sb.rpc("expo_leaderboard");
 async function adm(){const[{data:c0=[]},{data:pr0=[]},{data:l0=[]},{data:sp=[]}]=await Promise.all([sb.from("expo_customers").select("id,salesperson_id,lead_status,city,industry,next_followup_date,card_image_path"),sb.from("expo_customer_products").select("customer_id,product"),sb.rpc("expo_leaderboard"),sb.from("expo_salespeople").select("id").eq("show_on_leaderboard",true)]);
   const ok=new Set(sp.map(x=>x.id)),c=c0.filter(x=>ok.has(x.salesperson_id)),cid=new Set(c.map(x=>x.id)),pr=pr0.filter(x=>cid.has(x.customer_id)),LBO=["nitish","hanumant","manjeet","preeti"],l=l0.filter(r=>LBO.some(k=>String(r.full_name).toLowerCase().includes(k)));
   const cnt=(a,f)=>Object.entries(a.reduce((o,x)=>{const k=f(x)||"Not specified";o[k]=(o[k]||0)+1;return o},{})).sort((a,b)=>b[1]-a[1]),
-  box=(t,r,n=6)=>{const mx=r[0]?r[0][1]:1,bar=x=>`<div class="bar2">${esc(x[0])} <b style="float:right">${x[1]}</b><div style="width:${Math.max(6,x[1]/mx*100)}%"></div></div>`;
+  box=(t,r,n=6)=>{const mx=r[0]?r[0][1]:1,bar=x=>`<div class="bar2">${esc(x[0])} <b style="float:right">${x[1]}</b><div style="--w:${Math.max(6,x[1]/mx*100)}%"></div></div>`;
     return `<div class="card"><h3 style="font-size:16px">${t}</h3>${r.slice(0,n).map(bar).join("")||"<small>No data yet</small>"}${r.length>n?`<div class="hide">${r.slice(n).map(bar).join("")}</div><button class="btn l w" style="min-height:42px" onclick="const d=this.previousElementSibling;d.classList.toggle('hide');this.textContent=d.classList.contains('hide')?'Show all (${r.length})':'Show less'">Show all (${r.length})</button>`:""}</div>`},
   city=x=>(x.city||"").trim().toLowerCase().replace(/\b\w/g,m=>m.toUpperCase());
-  M(`${HERO}<div class="grid">${STAGES.slice(0,5).map(([v,l])=>stat(l,c.filter(x=>nz(x.lead_status)===v).length)).join("")}</div>
+  M(`${greet()}${pipe(cnts(c))}<div class="grid">${cnts(c).map((n,i)=>stat(STAGES[i][1],n)).join("")}</div>
   <div class="cols">${box("Salesperson-wise customers",l.map(r=>[r.full_name,r.total]))}${box("Product-wise interest",cnt(pr,x=>x.product))}${box("Industry-wise",cnt(c,x=>normInd(x.industry)))}${box("City-wise",cnt(c,city))}</div>`)}
 
 
-document.addEventListener("click",e=>{const l=e.target.closest(".micl");if(l){VL=VL==="en-IN"?"hi-IN":"en-IN";document.querySelectorAll(".micl").forEach(x=>x.textContent=VL==="hi-IN"?"हिं":"EN");toast(VL==="hi-IN"?"Voice language: Hindi":"Voice language: English");return}
-  const b=e.target.closest(".mic");if(!b)return;const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+document.addEventListener("click",e=>{const b=e.target.closest(".mic");if(!b)return;const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
   if(!SR)return toast("Voice typing is not supported here. Use Chrome (Android) or Safari (iPhone/iPad).",1);
   if(b.rec){b.rec.stop();return}
-  const t=document.querySelector(b.dataset.t);if(!t)return;const r=new SR();r.lang=VL;r.continuous=true;r.interimResults=false;b.rec=r;b.classList.add("on");b.textContent="⏹ Stop";
-  r.onresult=ev=>{let x="";for(let i=ev.resultIndex;i<ev.results.length;i++)if(ev.results[i].isFinal)x+=ev.results[i][0].transcript+" ";x=x.trim();if(x){t.value=(t.value?t.value+" ":"")+x;t.dispatchEvent(new Event("input"))}};
+  const t=document.querySelector(b.dataset.t);if(!t)return;const r=new SR();r.lang="hi-IN";r.continuous=true;r.interimResults=false;b.rec=r;b.classList.add("on");b.textContent="⏹ Sun raha hoon… (stop)";
+  r.onresult=ev=>{let x="";for(let i=ev.resultIndex;i<ev.results.length;i++)if(ev.results[i].isFinal)x+=ev.results[i][0].transcript+" ";x=DV(x).trim();if(x){t.value=(t.value?t.value+" ":"")+x;t.dispatchEvent(new Event("input"))}};
   r.onerror=ev=>toast(ev.error==="not-allowed"?"Please allow microphone permission":"Voice error: "+ev.error,1);
-  r.onend=()=>{b.rec=null;b.classList.remove("on");b.textContent="🎤 Speak"};try{r.start()}catch(_){}});
+  r.onend=()=>{b.rec=null;b.classList.remove("on");b.textContent="🎤 Bolo (Hinglish)"};try{r.start()}catch(_){}});
 init();
 </script></body></html>
