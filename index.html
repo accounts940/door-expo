@@ -92,7 +92,8 @@ async function init(){
 function setUI(on){$("#who").classList.toggle("hide",!on);$("#lo").classList.toggle("hide",!on);$("#nav").classList.toggle("hide",!on);
   if(on)$("#who").innerHTML=`<b>${esc(me.full_name)}</b><span class="badge ${isAdm()?"adm":""}">${isAdm()?"Management":"Salesperson"}</span>`}
 $("#lo").onclick=()=>out();
-function login(){setUI(false);M(`${HERO}<div class="card lg"><h3>Welcome 👋</h3><label>Email</label><input id="e" type="email" autocomplete="username"><label>Password</label><input id="p" type="password" autocomplete="current-password"><button class="btn r w" id="lgb">Login</button><div id="le" class="err"></div></div>`);
+function login(){setUI(false);M(`${HERO}<div class="card lg"><h3>Welcome 👋</h3><label>Email</label><input id="e" type="email" autocomplete="username"><label>Password</label><div style="position:relative"><input id="p" type="password" autocomplete="current-password" style="padding-right:64px"><button type="button" id="eye" style="position:absolute;right:8px;top:50%;transform:translateY(-50%);border:0;background:none;color:#1a2a6c;font-weight:600;cursor:pointer">Show</button></div><button class="btn r w" id="lgb">Login</button><div id="le" class="err"></div></div>`);
+  $("#eye").onclick=()=>{const p=$("#p"),h=p.type==="password";p.type=h?"text":"password";$("#eye").textContent=h?"Hide":"Show";p.focus()};
   const go=async()=>{$("#lgb").disabled=true;const{error}=await sb.auth.signInWithPassword({email:$("#e").value.trim(),password:$("#p").value});if(error){$("#le").textContent=error.message;$("#lgb").disabled=false}else init()};
   $("#lgb").onclick=go;$("#p").onkeydown=e=>e.key==="Enter"&&go()}
 async function out(){await sb.auth.signOut();me=null;login()}
