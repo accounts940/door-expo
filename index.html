@@ -218,7 +218,7 @@ document.addEventListener("change",async e=>{const i=e.target.closest("input[dat
   imgs[s]={blob:b,url:URL.createObjectURL(b)};$("#t-"+s).outerHTML=tile(s,s==="front"?"Front side":"Back side",s==="front"?"Required":"Optional");$("#ex").disabled=!imgs.front});
 function compress(f){return new Promise(r=>{const i=new Image();i.onload=()=>{const k=Math.min(1,1500/Math.max(i.width,i.height)),c=document.createElement("canvas");c.width=i.width*k;c.height=i.height*k;c.getContext("2d").drawImage(i,0,0,c.width,c.height);c.toBlob(r,"image/jpeg",.8)};i.src=URL.createObjectURL(f)})}
 const b64=b=>new Promise(r=>{const fr=new FileReader();fr.onload=()=>r(fr.result.split(",")[1]);fr.readAsDataURL(b)});
-async function extract(){const st=$("#st"),bt=$("#ex");st.style.color="var(--navy)";st.textContent="Reading the card…";bt.disabled=true;
+async function extract(){const st=$("#st"),bt=$("#ex");st.style.color="var(--navy)";st.textContent="Reading the card / form…";bt.disabled=true;
   try{const{data:{session}}=await sb.auth.getSession(),list=[imgs.front,imgs.back].filter(Boolean);
     const images=await Promise.all(list.map(async x=>({data:await b64(x.blob),mime:"image/jpeg"})));
     const r=await fetch(EXTRACT_URL,{method:"POST",headers:{"Content-Type":"application/json",Authorization:"Bearer "+session.access_token,apikey:SUPABASE_ANON_KEY},body:JSON.stringify({images})});
@@ -232,8 +232,10 @@ function form(c,pr){return `<div class="f2">${FIELDS.map(([k,l])=>k==="industry"
 <label>Remarks</label><textarea data-k="remarks" rows="3">${esc(c.remarks)}</textarea>${mic('[data-k="remarks"]')}`}
 const read=()=>{const o={};document.querySelectorAll("[data-k]").forEach(e=>o[e.dataset.k]=e.value.trim()||null);return o},prods=()=>[...document.querySelectorAll("#pr input:checked")].map(x=>x.value);
 
+const rotUrl=(u,d)=>new Promise(r=>{d=((+d||0)%360+360)%360;if(!d)return r(u);const i=new Image();i.onload=()=>{const c=document.createElement("canvas"),q=d%180;c.width=q?i.height:i.width;c.height=q?i.width:i.height;const x=c.getContext("2d");x.translate(c.width/2,c.height/2);x.rotate(d*Math.PI/180);x.drawImage(i,-i.width/2,-i.height/2);r(c.toDataURL("image/jpeg",.8))};i.onerror=()=>r(u);i.src=u});
 async function verify(){ext.industry=normInd(ext.industry)||null;
-  M(`<div class="card"><h3>Check &amp; Confirm</h3><div class="thumbs">${[imgs.front,imgs.back].filter(Boolean).map(x=>`<img src="${x.url}">`).join("")}</div><div id="dp"></div>${form(ext,[])}<button class="btn g w" id="sv">✅ Confirm &amp; Save</button><button class="btn l w" onclick="go('up')">Cancel</button></div>`);
+  const th=await Promise.all([imgs.front,imgs.back].filter(Boolean).map((x,i)=>rotUrl(x.url,(ext.rotations||[])[i]))),pp=(Array.isArray(ext.products)?ext.products:[]).filter(p=>PRODUCTS.includes(p));
+  M(`<div class="card"><h3>Check &amp; Confirm</h3><div class="thumbs">${th.map(u=>`<img src="${u}">`).join("")}</div><div id="dp"></div>${form(ext,pp)}<button class="btn g w" id="sv">✅ Confirm &amp; Save</button><button class="btn l w" onclick="go('up')">Cancel</button></div>`);
   const{data:n}=await sb.rpc("expo_check_duplicate",{p_mobile:ext.mobile||"",p_email:ext.email||"",p_company:ext.company_name||""});
   if(n>0)$("#dp").innerHTML=`<div class="warn">⚠️ Possible duplicate: this mobile, email or company already exists in the Expo database. Management will review it. You can still save.</div>`;
   $("#sv").onclick=async()=>{const v=read(),bt=$("#sv");bt.disabled=true;const P={};
