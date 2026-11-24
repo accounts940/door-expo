@@ -46,7 +46,7 @@ input:focus,select:focus,textarea:focus{outline:0;border-color:var(--green);box-
 .rank{display:flex;align-items:center;gap:12px;padding:12px;border-radius:16px;background:#fff;margin-bottom:10px;box-shadow:0 2px 10px #14226b10}.rank.me{border:2px solid var(--green)}
 .rank .n{font-size:24px;width:38px;text-align:center;font-weight:800;color:var(--navy)}.rank .st{margin-left:auto;display:flex;gap:14px;text-align:center;font-size:11px;color:var(--mu)}.rank .st b{display:block;font-size:18px;color:var(--navy)}
 .bar2{margin:8px 0;font-size:13px}.bar2 div{height:9px;border-radius:6px;background:linear-gradient(90deg,var(--dg),var(--green));margin-top:3px;transition:width .6s}
-.warn{background:#fff3cd;color:#6b4b00;border-radius:12px;padding:12px;margin:10px 0;font-size:14px}.thumbs{display:flex;gap:10px}.thumbs img{flex:1;min-width:0;max-height:170px;object-fit:cover;border-radius:12px}
+.warn{background:#fff3cd;color:#6b4b00;border-radius:12px;padding:12px;margin:10px 0;font-size:14px}.thumbs{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;align-items:flex-start}.thumbs img{flex:0 1 auto;width:auto;height:auto;max-width:100%;max-height:min(26vh,200px);object-fit:contain;border-radius:14px;background:#eef1f6;cursor:zoom-in;display:block}
 .sec{font-size:12px;font-weight:800;letter-spacing:.6px;color:var(--mu);text-transform:uppercase;margin:16px 4px 8px}.sec.red{color:var(--red)}
 .nav{position:fixed;left:0;right:0;bottom:0;z-index:30;display:flex;align-items:flex-end;background:#fff;border-top:1px solid #e3e8e5;padding:6px 6px calc(6px + env(safe-area-inset-bottom));box-shadow:0 -8px 24px #14226b14;max-width:760px;margin:auto;border-radius:22px 22px 0 0}
 .nav button{flex:1;border:0;background:none;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:11px;color:var(--mu);min-height:54px;border-radius:12px;transition:.2s;font-family:inherit}.nav i{font-style:normal;font-size:22px;transition:.2s}.nav .on{color:var(--navy);font-weight:800}.nav .on i{transform:translateY(-2px) scale(1.12)}
@@ -140,6 +140,17 @@ main>h3{color:#fff;font-size:24px}main>p{color:#ffffffb8!important}.sec{color:#f
 .nav{background:#0c1650cc;border:1px solid #ffffff2e;box-shadow:0 18px 40px -10px #000a}.nav button{color:#ffffffa6}.nav .on{color:#fff}.nav .on::after{background:#8cf0b4}.nav .fab{color:#fff}
 .btn.l{background:#ffffffee}
 .f2 .fl,.f2>div>label+input{margin-top:14px}.f2 .fl input{min-height:54px}
+
+/* ===== compact adaptive photo previews ===== */
+.tile.has{min-height:0;padding:8px;background:#f1f4f9;justify-content:flex-start}
+.tile.has>img{position:static;width:auto;height:auto;max-width:100%;max-height:min(28vh,210px);object-fit:contain;border-radius:12px;cursor:zoom-in}
+.tile.has .ov{position:static;background:none;padding:8px 0 0;flex-wrap:wrap;gap:6px}
+.tiles{align-items:start}
+.th{position:relative;max-width:100%;display:flex;flex-direction:column;align-items:center;gap:6px}
+.tb{display:flex;gap:6px}.tb button{border:0;background:#eef1f6;color:var(--navy);border-radius:12px;min-width:44px;min-height:40px;font-size:18px;font-weight:700;cursor:pointer;font-family:inherit}
+.zoomv{position:fixed;inset:0;z-index:100;background:#000d;display:grid;place-items:center;padding:12px;animation:rise .25s both;cursor:zoom-out}
+.zoomv img{max-width:96vw;max-height:92vh;object-fit:contain;border-radius:12px}
+main{padding-bottom:130px}
 </style></head><body>
 <header class="top"><img id="lg" alt="SELMEX"><div class="who hide" id="who"></div><button class="xbtn hide" id="lo" title="Sign out">⎋</button></header>
 <main id="m"><div class="sp"></div></main><nav class="nav hide" id="nav"></nav><div id="toast"></div>
@@ -175,6 +186,13 @@ const pipe=a=>{const T=a.reduce((x,y)=>x+y,0),t=T||1;return `<div class="card"><
 const greet=()=>{const h=new Date().getHours(),g=h<12?"Good morning":h<17?"Good afternoon":"Good evening",d=Math.ceil((new Date("2026-12-10T00:00")-new Date())/864e5);return `<div class="hero2"><div class="blob b1"></div><div class="blob b2"></div><small>${d>0?"⏳ "+d+" days to expo":d>-3?"🔥 Expo is live":"✅ Expo wrapped up"}</small><h2>${g},<br><span>${esc((me.full_name||"").split(" ")[0])}</span> 👋</h2><p>Zak Doors &amp; Windows Expo · Hall 2, Stall DD7 · Yashobhoomi, Delhi</p></div>`};
 function anim(){document.querySelectorAll("#m .stat,#m .item,#m .lbc,#m .card").forEach((e,i)=>e.style.setProperty("--d",Math.min(i,14)));
   document.querySelectorAll("#m [data-n]").forEach(e=>{const n=+e.dataset.n,t0=performance.now(),f=t=>{const p=Math.min(1,(t-t0)/900);e.textContent=Math.round(n*(1-Math.pow(1-p,3)));if(p<1)requestAnimationFrame(f)};requestAnimationFrame(f)})}
+
+let RL=[],RD=[];
+const rotBlob=(b,d)=>new Promise(r=>{const u=URL.createObjectURL(b),i=new Image();i.onload=()=>{const c=document.createElement("canvas"),q=((d%360)+360)%180;c.width=q?i.height:i.width;c.height=q?i.width:i.height;const x=c.getContext("2d");x.translate(c.width/2,c.height/2);x.rotate(d*Math.PI/180);x.drawImage(i,-i.width/2,-i.height/2);c.toBlob(r,"image/jpeg",.85)};i.src=u});
+document.addEventListener("click",async e=>{
+  const z=e.target.closest(".thumbs img,.tile>img");if(z){const v=document.createElement("div");v.className="zoomv";v.innerHTML=`<img src="${z.src}">`;v.onclick=()=>v.remove();document.body.appendChild(v);return}
+  const a=e.target.closest("[data-rot]");if(a){const w=a.closest(".th"),i=+w.dataset.i;RD[i]=(((RD[i]||0)+ +a.dataset.rot)%360+360)%360;w.querySelector("img").src=await rotUrl(RL[i].url,RD[i]);return}
+  const t=e.target.closest("[data-trot]");if(t){const k=t.dataset.ts,f=imgs[k];if(!f)return;const nb=await rotBlob(f.blob,+t.dataset.trot);imgs[k]={blob:nb,url:URL.createObjectURL(nb)};$("#t-"+k).outerHTML=tile(k,k==="front"?"Front side":"Back side",k==="front"?"Required":"Optional")}});
 document.addEventListener("pointerdown",e=>{const b=e.target.closest(".btn,.item,.step,.mic");if(!b)return;const r=b.getBoundingClientRect(),z=Math.max(r.width,r.height),p=document.createElement("span");p.className="rip";p.style.cssText=`width:${z}px;height:${z}px;left:${e.clientX-r.left-z/2}px;top:${e.clientY-r.top-z/2}px`;b.style.position=b.style.position||"relative";b.style.overflow="hidden";b.appendChild(p);setTimeout(()=>p.remove(),600)});
 const pill=s=>`<span class="pill s-${String(s).replace(/[^A-Za-z]/g,"")}">${esc(LBL[s]||s)}</span>`;
 const row=c=>`<div class="item" onclick="detail('${c.id}')"><div class="av">${esc((c.customer_name||c.company_name||"?").charAt(0).toUpperCase())}</div><div class="mid"><b>${esc(c.customer_name||"—")}</b><small>${esc(c.company_name||"")}${c.city?" · "+esc(c.city):""}</small>${c.expo_salespeople?`<small class="by">👤 ${esc(c.expo_salespeople.full_name)}</small>`:""}</div><div class="rt">${pill(c.lead_status)}<div style="display:flex;gap:6px">${waNum(c)?`<a class="call wa" href="${waLink(c)}" target="_blank" rel="noopener" onclick="event.stopPropagation()">💬</a>`:""}${c.mobile?`<a class="call" href="tel:${esc(c.mobile)}" onclick="event.stopPropagation()">📞</a>`:""}</div></div></div>`;
@@ -210,7 +228,7 @@ async function dash(){
   M(`${greet()}<div class="grid">${cnts(c).map((n,i)=>stat(STAGES[i][1],n)).join("")}</div>
   <button class="btn r w" onclick="go('up')" style="font-size:18px;min-height:58px">📷 Scan Visiting Card</button><div class="sec">Recent cards</div>${c.slice(0,5).map(row).join("")||'<div class="card">No visitors yet. Tap Scan to add the first one.</div>'}`)}
 
-function tile(s,t,sub){const f=imgs[s];return `<div class="tile ${f?"has":""}" id="t-${s}">${f?`<img src="${f.url}"><div class="ov">`:`<div style="font-size:34px">${s==="front"?"🪪":"🔄"}</div><h4>${t}</h4><small>${sub}</small><div>`}<label class="mini o">📷 ${f?"Retake":"Camera"}<input type="file" accept="image/*" capture="environment" data-s="${s}"></label><label class="mini">🖼 Gallery<input type="file" accept="image/*" data-s="${s}"></label></div></div>`}
+function tile(s,t,sub){const f=imgs[s];return `<div class="tile ${f?"has":""}" id="t-${s}">${f?`<img src="${f.url}"><div class="ov">`:`<div style="font-size:34px">${s==="front"?"🪪":"🔄"}</div><h4>${t}</h4><small>${sub}</small><div>`}${f?`<button type="button" class="mini" data-trot="-90" data-ts="${s}">↺</button><button type="button" class="mini" data-trot="90" data-ts="${s}">↻</button>`:""}<label class="mini o">📷 ${f?"Retake":"Camera"}<input type="file" accept="image/*" capture="environment" data-s="${s}"></label><label class="mini">🖼 Gallery<input type="file" accept="image/*" data-s="${s}"></label></div></div>`}
 function up(){imgs={front:null,back:null};ext={};
   M(`<div class="card"><h3>Scan Visiting Card</h3><p style="margin:0 0 12px;color:var(--mu);font-size:14px">Add the front. If the card has details on the back too, add the back side as well.</p><div class="tiles">${tile("front","Front side","Required")}${tile("back","Back side","Optional")}</div><button class="btn g w" id="ex" disabled>✨ Extract details with AI</button><button class="btn l w" id="mn">✍️ Enter details manually</button><div id="st" class="err"></div></div>`);
   $("#ex").onclick=extract;$("#mn").onclick=()=>{ext={};verify()}}
@@ -235,7 +253,8 @@ const read=()=>{const o={};document.querySelectorAll("[data-k]").forEach(e=>o[e.
 const rotUrl=(u,d)=>new Promise(r=>{d=((+d||0)%360+360)%360;if(!d)return r(u);const i=new Image();i.onload=()=>{const c=document.createElement("canvas"),q=d%180;c.width=q?i.height:i.width;c.height=q?i.width:i.height;const x=c.getContext("2d");x.translate(c.width/2,c.height/2);x.rotate(d*Math.PI/180);x.drawImage(i,-i.width/2,-i.height/2);r(c.toDataURL("image/jpeg",.8))};i.onerror=()=>r(u);i.src=u});
 async function verify(){ext.industry=normInd(ext.industry)||null;
   const th=await Promise.all([imgs.front,imgs.back].filter(Boolean).map((x,i)=>rotUrl(x.url,(ext.rotations||[])[i]))),pp=(Array.isArray(ext.products)?ext.products:[]).filter(p=>PRODUCTS.includes(p));
-  M(`<div class="card"><h3>Check &amp; Confirm</h3><div class="thumbs">${th.map(u=>`<img src="${u}">`).join("")}</div><div id="dp"></div>${form(ext,pp)}<button class="btn g w" id="sv">✅ Confirm &amp; Save</button><button class="btn l w" onclick="go('up')">Cancel</button></div>`);
+  RL=[imgs.front,imgs.back].filter(Boolean);RD=RL.map((_,i)=>(((+(ext.rotations||[])[i]||0)%360)+360)%360);
+  M(`<div class="card"><h3>Check &amp; Confirm</h3><div class="thumbs">${th.map((u,i)=>`<div class="th" data-i="${i}"><img src="${u}" alt="card"><div class="tb"><button type="button" data-rot="-90" title="Rotate left">↺</button><button type="button" data-rot="90" title="Rotate right">↻</button></div></div>`).join("")}</div><div id="dp"></div>${form(ext,pp)}<button class="btn g w" id="sv">✅ Confirm &amp; Save</button><button class="btn l w" onclick="go('up')">Cancel</button></div>`);
   const{data:n}=await sb.rpc("expo_check_duplicate",{p_mobile:ext.mobile||"",p_email:ext.email||"",p_company:ext.company_name||""});
   if(n>0)$("#dp").innerHTML=`<div class="warn">⚠️ Possible duplicate: this mobile, email or company already exists in the Expo database. Management will review it. You can still save.</div>`;
   $("#sv").onclick=async()=>{const v=read(),bt=$("#sv");bt.disabled=true;const P={};
