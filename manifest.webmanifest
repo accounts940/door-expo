@@ -1,0 +1,18 @@
+{
+  "id": "./",
+  "name": "SELMEX Expo CRM",
+  "short_name": "SELMEX Expo",
+  "description": "Scan visiting cards, track leads and follow-ups at the Zak Doors & Windows Expo.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0c1650",
+  "theme_color": "#14226b",
+  "categories": ["business", "productivity"],
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
