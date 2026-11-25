@@ -243,7 +243,7 @@ async function extract(){const st=$("#st"),bt=$("#ex");st.style.color="var(--nav
   try{const{data:{session}}=await sb.auth.getSession(),list=[imgs.front,imgs.back].filter(Boolean);
     const images=await Promise.all(list.map(async x=>({data:await b64(x.blob),mime:"image/jpeg"})));
     const r=await fetch(EXTRACT_URL,{method:"POST",headers:{"Content-Type":"application/json",Authorization:"Bearer "+session.access_token,apikey:SUPABASE_ANON_KEY},body:JSON.stringify({images})});
-    if(!r.ok)throw new Error("Extraction failed ("+r.status+")");ext=await r.json();verify()}
+    if(!r.ok){let m="";try{const j=await r.json();m=j.error||j.message||j.msg||""}catch(_){}throw new Error("Extraction failed ("+r.status+")"+(m?": "+m+(/Not allowed|Member/.test(m)?"":""):""))}ext=await r.json();verify()}
   catch(e){st.style.color="var(--red)";st.innerHTML=`${esc(e.message)}. Retake the photo or <a href="#" onclick="ext={};verify();return false">enter details manually</a>.`;bt.disabled=false}}
 
 function form(c,pr){return `<div class="f2">${FIELDS.map(([k,l])=>k==="industry"?`<div><label>${l}</label><select data-k="industry"><option value="">Select…</option>${INDUSTRIES.map(i=>`<option ${i===normInd(c.industry)?"selected":""}>${i}</option>`).join("")}</select></div>`:`<div class="fl"><input data-k="${k}" value="${esc(c[k])}" placeholder=" "><label>${l}</label></div>`).join("")}</div>
