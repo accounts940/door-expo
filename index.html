@@ -153,7 +153,7 @@ main>h3{color:#fff;font-size:24px}main>p{color:#ffffffb8!important}.sec{color:#f
 main{padding-bottom:130px}
 .chips{gap:10px}.chips span{padding:11px 16px;border-radius:16px;background:#fff;box-shadow:0 1px 2px #14226b10;transition:transform .18s,box-shadow .2s,background .2s}
 .chips label:active span{transform:scale(.95)}.chips input:checked+span{background:linear-gradient(135deg,#14226b,#1f9d55);border-color:transparent;box-shadow:0 8px 18px -8px #14226b99}.chips input:checked+span::after{content:" ✓";font-weight:800}
-</style></head><body>
+.dt{color:var(--mu);font-size:11.5px}.dts{margin-top:12px;padding:10px 12px;border-radius:14px;background:#f1f4f9;font-size:12.5px;color:var(--mu);line-height:1.6}.dts b{color:var(--navy)}</style></head><body>
 <header class="top"><img id="lg" alt="SELMEX"><div class="who hide" id="who"></div><button class="xbtn hide" id="lo" title="Sign out">⎋</button></header>
 <main id="m"><div class="sp"></div></main><nav class="nav hide" id="nav"></nav><div id="toast"></div>
 <script src="config.js"></script>
@@ -166,6 +166,7 @@ const sb=supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
 const PRODUCTS=["BOPP Adhesive Tape", "Silicone Sealant", "Masking Tape", "Acrylic VHB Tape", "SPF Tape", "Stretch Film", "Bubble Packaging", "Kraft Tape", "EVA Tape", "Special Tape", "Other Products"],PICO={"BOPP Adhesive Tape":"📦","Silicone Sealant":"🧴","Masking Tape":"🎨","Acrylic VHB Tape":"🏗️","SPF Tape":"🖨️","Stretch Film":"🎞️","Bubble Packaging":"🫧","Kraft Tape":"📜","EVA Tape":"🧽","Special Tape":"⭐","Other Products":"➕"};
 const STAGES=[["Interested","New / Lead Accepted"],["Quotation Sent","Quotation Given"],["Negotiation","Sampling Done"],["Follow-up Required","Follow-up"],["Converted","Order Won"],["Not Interested","Not Interested"]];
 const STATUS=STAGES.map(x=>x[0]),LBL=Object.fromEntries(STAGES);LBL.New=LBL.Interested;
+const fd=d=>d?new Date(d).toLocaleDateString("en-IN",{day:"numeric",month:"short",year:"numeric"}):"",ft=d=>d?new Date(d).toLocaleString("en-IN",{day:"numeric",month:"short",year:"numeric",hour:"numeric",minute:"2-digit",hour12:true}):"",upd=c=>c.updated_at&&c.created_at&&new Date(c.updated_at)-new Date(c.created_at)>60000;
 const nz=v=>v==="New"?"Interested":v;const DV=(()=>{const C={क:"k",ख:"kh",ग:"g",घ:"gh",ङ:"n",च:"ch",छ:"chh",ज:"j",झ:"jh",ञ:"n",ट:"t",ठ:"th",ड:"d",ढ:"dh",ण:"n",त:"t",थ:"th",द:"d",ध:"dh",न:"n",प:"p",फ:"f",ब:"b",भ:"bh",म:"m",य:"y",र:"r",ल:"l",व:"v",श:"sh",ष:"sh",स:"s",ह:"h",ळ:"l"},V={अ:"a",आ:"aa",इ:"i",ई:"ee",उ:"u",ऊ:"oo",ऋ:"ri",ए:"e",ऐ:"ai",ओ:"o",औ:"au",ऑ:"o"},M={"ा":"a","ि":"i","ी":"ee","ु":"u","ू":"oo","े":"e","ै":"ai","ो":"o","ौ":"au","ृ":"ri","ॉ":"o","ं":"n","ँ":"n","ः":"h"},S="ािीुूेैोौृॉ";
 return t=>t.replace(/[\u0900-\u097F]+/g,w=>{const a=[...w];let o="";for(let i=0;i<a.length;i++){const h=a[i],x=a[i+1];if(h==="़")continue;if(C[h]!==undefined){o+=C[h];if(x==="़")i++;const y=a[i+1];if(y==="्")i++;else if(!(y&&S.includes(y))&&i<a.length-1)o+="a"}else if(V[h])o+=V[h];else if(M[h]!==undefined)o+=M[h];else if(h==="।")o+="."}return o})})();
 const mic=sel=>`<div class="vrow"><button type="button" class="mic" data-t='${sel}'>🎤 Bolo (Hinglish)</button></div>`;
@@ -197,7 +198,7 @@ document.addEventListener("click",async e=>{
   const t=e.target.closest("[data-trot]");if(t){const k=t.dataset.ts,f=imgs[k];if(!f)return;const nb=await rotBlob(f.blob,+t.dataset.trot);imgs[k]={blob:nb,url:URL.createObjectURL(nb)};$("#t-"+k).outerHTML=tile(k,k==="front"?"Front side":"Back side",k==="front"?"Required":"Optional")}});
 document.addEventListener("pointerdown",e=>{const b=e.target.closest(".btn,.item,.step,.mic");if(!b)return;const r=b.getBoundingClientRect(),z=Math.max(r.width,r.height),p=document.createElement("span");p.className="rip";p.style.cssText=`width:${z}px;height:${z}px;left:${e.clientX-r.left-z/2}px;top:${e.clientY-r.top-z/2}px`;b.style.position=b.style.position||"relative";b.style.overflow="hidden";b.appendChild(p);setTimeout(()=>p.remove(),600)});
 const pill=s=>`<span class="pill s-${String(s).replace(/[^A-Za-z]/g,"")}">${esc(LBL[s]||s)}</span>`;
-const row=c=>`<div class="item" onclick="detail('${c.id}')"><div class="av">${esc((c.customer_name||c.company_name||"?").charAt(0).toUpperCase())}</div><div class="mid"><b>${esc(c.customer_name||"—")}</b><small>${esc(c.company_name||"")}${c.city?" · "+esc(c.city):""}</small>${c.expo_salespeople?`<small class="by">👤 ${esc(c.expo_salespeople.full_name)}</small>`:""}</div><div class="rt">${pill(c.lead_status)}<div style="display:flex;gap:6px">${waNum(c)?`<a class="call wa" href="${waLink(c)}" target="_blank" rel="noopener" onclick="event.stopPropagation()">💬</a>`:""}${c.mobile?`<a class="call" href="tel:${esc(c.mobile)}" onclick="event.stopPropagation()">📞</a>`:""}</div></div></div>`;
+const row=c=>`<div class="item" onclick="detail('${c.id}')"><div class="av">${esc((c.customer_name||c.company_name||"?").charAt(0).toUpperCase())}</div><div class="mid"><b>${esc(c.customer_name||"—")}</b><small>${esc(c.company_name||"")}${c.city?" · "+esc(c.city):""}</small>${c.created_at?`<small class="dt">📅 ${fd(c.created_at)}${upd(c)?` · ✏️ ${fd(c.updated_at)}`:""}</small>`:""}${c.expo_salespeople?`<small class="by">👤 ${esc(c.expo_salespeople.full_name)}</small>`:""}</div><div class="rt">${pill(c.lead_status)}<div style="display:flex;gap:6px">${waNum(c)?`<a class="call wa" href="${waLink(c)}" target="_blank" rel="noopener" onclick="event.stopPropagation()">💬</a>`:""}${c.mobile?`<a class="call" href="tel:${esc(c.mobile)}" onclick="event.stopPropagation()">📞</a>`:""}</div></div></div>`;
 
 async function init(){
   const{data:{session}}=await sb.auth.getSession();if(!session)return login();
@@ -225,7 +226,7 @@ async function out(){await sb.auth.signOut();me=null;login()}
 function go(p){last=p;document.querySelectorAll(".nav button").forEach(b=>b.classList.toggle("on",b.dataset.p===p));M(spin);({dash,up,cus,fu,lb,adm,all})[p]()}
 
 async function dash(){
-  const{data:c=[]}=await sb.from("expo_customers").select("id,customer_name,company_name,city,mobile,lead_status,next_followup_date,card_image_path").eq("salesperson_id",me.id).order("created_at",{ascending:false});
+  const{data:c=[]}=await sb.from("expo_customers").select("id,customer_name,company_name,city,mobile,lead_status,next_followup_date,card_image_path,created_at,updated_at").eq("salesperson_id",me.id).order("created_at",{ascending:false});
   const pend=c.filter(x=>x.next_followup_date&&x.next_followup_date<=today()&&!["Converted","Not Interested"].includes(x.lead_status)).length,n=s=>c.filter(x=>x.lead_status===s).length;
   M(`${greet()}<div class="grid">${cnts(c).map((n,i)=>stat(STAGES[i][1],n)).join("")}</div>
   <button class="btn r w" onclick="go('up')" style="font-size:18px;min-height:58px">📷 Scan Visiting Card</button><div class="sec">Recent cards</div>${c.slice(0,5).map(row).join("")||'<div class="card">No visitors yet. Tap Scan to add the first one.</div>'}`)}
@@ -271,7 +272,7 @@ function all(){L={uid:null,page:0};listUI(true)}
 function listUI(adm){M(`<input id="q" placeholder="🔍 Search name, company, mobile…">${mic("#q")}<select id="fs" style="margin-top:8px"><option value="">All statuses</option>${STAGES.map(([v,l])=>`<option value="${v}">${l}</option>`).join("")}</select>${adm?'<button class="btn l w" id="csv">⬇ Export CSV</button>':""}<div id="ls" class="lgrid" style="margin-top:12px"></div>`);
   let t;$("#q").oninput=()=>{clearTimeout(t);t=setTimeout(()=>{L.page=0;load(true)},300)};$("#fs").onchange=()=>{L.page=0;load(true)};if(adm)$("#csv").onclick=csv;load(true)}
 async function load(reset){const el=$("#ls");if(reset)el.innerHTML=spin;
-  let q=sb.from("expo_customers").select("id,customer_name,company_name,mobile,lead_status,city,expo_salespeople(full_name)",{count:"exact"}).order("created_at",{ascending:false}).range(L.page*20,L.page*20+19);
+  let q=sb.from("expo_customers").select("id,customer_name,company_name,mobile,lead_status,city,created_at,updated_at,expo_salespeople(full_name)",{count:"exact"}).order("created_at",{ascending:false}).range(L.page*20,L.page*20+19);
   if(L.uid)q=q.eq("salesperson_id",L.uid);const s=($("#q").value||"").replace(/[,()%]/g,""),f=$("#fs").value;
   if(s)q=q.or(`customer_name.ilike.%${s}%,company_name.ilike.%${s}%,mobile.ilike.%${s}%`);if(f)q=f==="Interested"?q.in("lead_status",["New","Interested"]):q.eq("lead_status",f);
   const{data=[],count}=await q;if(reset)el.innerHTML="";el.querySelector("#mr")?.remove();
@@ -288,12 +289,13 @@ async function detail(id){M(spin);
   const[f,b]=await Promise.all([signed(c.card_image_path),signed(c.card_back_path)]),wa=waNum(c),idx=STAGES.findIndex(x=>x[0]===nz(c.lead_status)),nx=idx>=0&&idx<4?STAGES[idx+1]:null;let sel=nz(c.lead_status||"Interested");
   M(`<button class="btn l" onclick="go(last)" style="margin:0 0 10px">‹ Back</button>
   <div class="dg"><div><div class="card"><div style="display:flex;gap:12px;align-items:center"><div class="av">${esc((c.customer_name||c.company_name||"?").charAt(0).toUpperCase())}</div><div class="mid"><b style="font-size:18px">${esc(c.customer_name||"Customer")}</b><small>${esc(c.company_name||"")}${c.city?" · "+esc(c.city):""}</small>${c.expo_salespeople?`<small class="by">👤 Collected by ${esc(c.expo_salespeople.full_name)}</small>`:""}</div>${pill(c.lead_status)}</div>
+  ${c.created_at?`<div class="dts">🗓️ Entered <b>${ft(c.created_at)}</b>${upd(c)?`<br>✏️ Last updated <b>${ft(c.updated_at)}</b>`:""}</div>`:""}
   <div class="acts">${c.mobile?`<a class="btn g" href="tel:${esc(c.mobile)}">📞 Call</a>`:""}${wa?`<a class="btn" href="${waLink(c)}" target="_blank" rel="noopener" style="background:#25a244">💬 WhatsApp</a>`:""}</div></div>
   <div class="card"><h3>🔄 Update progress</h3><div class="steps">${STAGES.map(([v,l],i)=>`<button type="button" class="step ${v===nz(c.lead_status)?"on":i<idx&&idx<5?"done":""}" data-v="${v}">${l}</button>`).join("")}</div>
   ${nx?`<button class="btn r w" id="nxt">Move to ${nx[1]} →</button>`:""}
   <label>Next follow-up date</label><input type="date" id="nfd" value="${c.next_followup_date||""}"><label>Update note</label><textarea id="nnt" rows="2" placeholder="e.g. Quotation sent on WhatsApp, sample couriered…"></textarea>${mic("#nnt")}<button class="btn g w" id="upb">Update status</button></div></div>
   <div><div class="card"><h3>📋 Full info</h3><div class="thumbs">${f?`<img src="${f}">`:""}${b?`<img src="${b}">`:""}</div>${form(c,p.map(x=>x.product))}<button class="btn g w" id="sv">Save changes</button></div></div></div>`);
-  const apply=async()=>{const d=$("#nfd").value||null,n=$("#nnt").value.trim(),o={lead_status:sel};if(d)o.next_followup_date=d;if(n)o.remarks=(c.remarks?c.remarks+"\n":"")+`[${today()} · ${LBL[sel]||sel}] ${n}`;
+  const apply=async()=>{const d=$("#nfd").value||null,n=$("#nnt").value.trim(),o={lead_status:sel};if(d)o.next_followup_date=d;if(n||sel!==nz(c.lead_status))o.remarks=(c.remarks?c.remarks+"\n":"")+`[${fd(new Date())} · ${LBL[sel]||sel}]${n?" "+n:""}`;
     const{error}=await sb.from("expo_customers").update(o).eq("id",id);if(error)return toast(error.message,1);
     if(d)await sb.from("expo_followups").insert({customer_id:id,due_date:d,note:n||null});toast("Updated ✓ "+(LBL[sel]||sel));detail(id)};
   document.querySelectorAll(".step").forEach(b=>b.onclick=()=>{sel=b.dataset.v;document.querySelectorAll(".step").forEach(x=>x.classList.toggle("on",x===b))});
@@ -302,7 +304,7 @@ async function detail(id){M(spin);
     if(!error){await sb.from("expo_customer_products").delete().eq("customer_id",id);const pr=prods();if(pr.length)await sb.from("expo_customer_products").insert(pr.map(x=>({customer_id:id,product:x})))}
     error?toast(error.message,1):toast("Saved ✓")}}
 
-async function fu(){const{data=[]}=await sb.from("expo_customers").select("id,customer_name,company_name,city,mobile,lead_status,next_followup_date").eq("salesperson_id",me.id).not("next_followup_date","is",null).order("next_followup_date"),t=today();
+async function fu(){const{data=[]}=await sb.from("expo_customers").select("id,customer_name,company_name,city,mobile,lead_status,next_followup_date,created_at,updated_at").eq("salesperson_id",me.id).not("next_followup_date","is",null).order("next_followup_date"),t=today();
   const g=(h,a,c)=>a.length?`<div class="sec ${c||""}">${h} · ${a.length}</div>${a.map(x=>row(x)).join("")}`:"";
   M(`<h3>📅 My Follow-ups</h3>${g("Overdue",data.filter(x=>x.next_followup_date<t),"red")}${g("Today",data.filter(x=>x.next_followup_date===t))}${g("Upcoming",data.filter(x=>x.next_followup_date>t))}${data.length?"":'<div class="card">No follow-ups scheduled.</div>'}`)}
 
