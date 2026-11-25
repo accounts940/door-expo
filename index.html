@@ -225,7 +225,19 @@ main{contain:layout style}
 .rk .dt{background:var(--c);box-shadow:0 0 0 4px color-mix(in srgb,var(--c) 18%,transparent)}
 .rk b{min-width:38px;text-align:center;padding:4px 10px;border-radius:20px;font-size:13px;font-weight:800;font-variant-numeric:tabular-nums;color:var(--c);background:color-mix(in srgb,var(--c) 13%,#fff)}
 .rk em{display:none}
-</style></head><body>
+
+/* ===== quotation builder ===== */
+.qi{background:#fff;border-radius:20px;padding:14px;margin-bottom:10px;box-shadow:0 8px 22px -14px #14226b77;animation:rise .4s both}
+.qh{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}.qh b{color:var(--navy)}
+.qx{border:0;background:#fde8e8;color:#c0262d;width:34px;height:34px;border-radius:50%;font-size:15px;cursor:pointer}
+.q4{display:grid;grid-template-columns:1fr 1fr;gap:8px 10px;margin-top:8px}.q4 label{margin:0}
+@media(min-width:700px){.q4{grid-template-columns:repeat(4,1fr)}}
+.qa{margin-top:10px;text-align:right;color:var(--mu);font-size:13px}.qa b{color:var(--navy);font-size:15px}
+#qtot>div{display:flex;justify-content:space-between;padding:7px 2px;font-size:14px;color:var(--tx)}#qtot b{font-variant-numeric:tabular-nums;color:var(--navy)}
+#qtot .gt{margin-top:6px;padding:12px 14px;border-radius:14px;background:linear-gradient(135deg,#14226b,#1f5a8a);color:#fff;font-size:15px}#qtot .gt b{color:#fff;font-size:18px}
+#qtot small{display:block;margin-top:8px;color:var(--mu);font-size:12px;line-height:1.4}
+.qbar{display:flex;gap:8px;padding:12px 14px calc(12px + env(safe-area-inset-bottom));background:#fff;border-top:1px solid #e6eaf3;border-radius:0 0 28px 28px}.qbar .btn{flex:1;margin:0;min-height:50px;font-size:14px;padding:0 6px}.qbar .btn:first-child{flex:1.4}
+.qbar .btn:first-child{flex:2}.zoomv.q{display:block;overflow:auto;padding:14px;cursor:zoom-out;-webkit-overflow-scrolling:touch}.zoomv.q img{display:block;width:min(100%,720px);max-width:none;max-height:none;margin:0 auto}</style></head><body>
 <header class="top"><img id="lg" alt="SELMEX"><div class="who hide" id="who"></div><button class="xbtn hide" id="inst" title="Install app" onclick="installApp()">📲</button><button class="xbtn hide" id="lo" title="Sign out">⎋</button></header>
 <main id="m"><div class="sp"></div></main><nav class="nav hide" id="nav"></nav><div id="toast"></div>
 <script src="config.js"></script>
@@ -294,6 +306,64 @@ async function installApp(){if(IP){IP.prompt();try{await IP.userChoice}catch(_){
 addEventListener("beforeinstallprompt",e=>{e.preventDefault();IP=e;showInst()});addEventListener("appinstalled",()=>{IP=null;toast("App installed ✓");showInst()});
 addEventListener("offline",()=>toast("You are offline. Changes can't be saved until you reconnect.",1));addEventListener("online",()=>toast("Back online ✓"));
 if("serviceWorker"in navigator&&location.protocol==="https:")addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}));
+
+/* ===== Quotation builder + PDF ===== */
+let QR=[],QC=null;
+const QU=["Roll","Pcs","Kg","Box","Mtr","Sq.Mtr","Nos","Set"],dUnit=n=>/tape|bubble/i.test(n)?"Roll":/film/i.test(n)?"Kg":"Pcs",money=n=>"₹"+(+n||0).toLocaleString("en-IN",{minimumFractionDigits:2,maximumFractionDigits:2});
+const nw=n=>{n=Math.round(n);if(!n)return"Zero";const a=["","One","Two","Three","Four","Five","Six","Seven","Eight","Nine","Ten","Eleven","Twelve","Thirteen","Fourteen","Fifteen","Sixteen","Seventeen","Eighteen","Nineteen"],b=["","","Twenty","Thirty","Forty","Fifty","Sixty","Seventy","Eighty","Ninety"],t=x=>x<20?a[x]:b[Math.floor(x/10)]+(x%10?" "+a[x%10]:""),h=x=>(x>99?a[Math.floor(x/100)]+" Hundred"+(x%100?" ":""):"")+(x%100?t(x%100):"");let o="";const cr=Math.floor(n/1e7),lk=Math.floor(n/1e5)%100,th=Math.floor(n/1e3)%100,rs=n%1000;if(cr)o+=h(cr)+" Crore ";if(lk)o+=t(lk)+" Lakh ";if(th)o+=t(th)+" Thousand ";if(rs)o+=h(rs);return o.trim()};
+const qPrefs=()=>{try{return JSON.parse(localStorage.getItem("qprefs")||"{}")}catch(_){return{}}};
+function qrows(){document.getElementById("qrows").innerHTML=QR.map((x,i)=>`<div class="qi" data-i="${i}"><div class="qh"><b>Item ${i+1}</b>${QR.length>1?`<button type="button" class="qx" data-qx="${i}" aria-label="Remove">✕</button>`:""}</div><input class="qn" list="qpl" placeholder="Product / description (add size if needed)" value="${esc(x.n)}"><div class="q4"><label>Qty<input class="qq" type="number" inputmode="decimal" min="0" value="${x.q}"></label><label>Unit<select class="qu">${QU.map(u=>`<option ${u===x.u?"selected":""}>${u}</option>`).join("")}</select></label><label>Rate (Rs.)<input class="qr" type="number" inputmode="decimal" min="0" placeholder="0" value="${x.r}"></label><label>GST %<input class="qg" type="number" inputmode="decimal" min="0" value="${x.g}"></label></div><div class="qa">Amount <b data-qa>${money(x.q*x.r)}</b></div></div>`).join("");qtot()}
+function qcalc(){let sub=0,gst=0;QR.forEach(x=>{const a=(+x.q||0)*(+x.r||0);sub+=a;gst+=a*(+x.g||0)/100});return{sub,gst,total:sub+gst}}
+function qtot(){const t=qcalc(),e=document.getElementById("qtot");if(e)e.innerHTML=`<div><span>Subtotal</span><b>${money(t.sub)}</b></div><div><span>GST</span><b>${money(t.gst)}</b></div><div class="gt"><span>Grand total</span><b>${money(t.total)}</b></div><small>${t.total>0?nw(t.total)+" Rupees Only":""}</small>`}
+function quoteBuilder(c,prods){QC=c;const pf=qPrefs();QR=(prods.length?prods:[""]).map(n=>({n,q:1,u:dUnit(n),r:"",g:18}));
+  openSheet("🧾 Quotation",`<div class="sh-b" id="qb"><datalist id="qpl">${PRODUCTS.map(p=>`<option value="${esc(p)}">`).join("")}</datalist><div class="sc"><div class="l"><i>👤</i><span><b>${esc(c.customer_name||"Customer")}</b>${c.company_name?" · "+esc(c.company_name):""}</span></div></div><div id="qrows"></div><button type="button" class="btn l w" id="qadd" style="margin:0 0 12px;min-height:46px">＋ Add item</button><div class="sc"><div class="q4"><label>Valid for (days)<input id="qdays" type="number" inputmode="numeric" value="${pf.days||15}"></label><label>Your contact no.<input id="qph" type="tel" inputmode="tel" placeholder="optional" value="${esc(pf.ph||"")}"></label></div></div><div class="sc" id="qtot"></div></div><div class="qbar"><button type="button" class="btn g" data-qs="wa">📤 Send on WhatsApp</button><button type="button" class="btn l" data-qs="pv">👁️ Preview</button><button type="button" class="btn l" data-qs="dl">⬇️ Save</button></div>`,esc(c.company_name||c.customer_name||""));
+  qrows();const b=$("#qb");
+  b.addEventListener("input",e=>{const r=e.target.closest(".qi");if(!r)return;const x=QR[+r.dataset.i],t=e.target;if(t.classList.contains("qn"))x.n=t.value;else if(t.classList.contains("qq"))x.q=t.value;else if(t.classList.contains("qr"))x.r=t.value;else if(t.classList.contains("qg"))x.g=t.value;else if(t.classList.contains("qu"))x.u=t.value;r.querySelector("[data-qa]").textContent=money((+x.q||0)*(+x.r||0));qtot()});
+  b.addEventListener("click",e=>{const x=e.target.closest("[data-qx]");if(x){QR.splice(+x.dataset.qx,1);qrows()}});
+  $("#qadd").onclick=()=>{QR.push({n:"",q:1,u:"Roll",r:"",g:18});qrows()}}
+function readQ(){const items=QR.filter(x=>String(x.n).trim()&&+x.q>0&&+x.r>0);if(!items.length){toast("Add at least one item with quantity and rate",1);return null}
+  const d={items,days:Math.max(1,+$("#qdays").value||15),ph:$("#qph").value.trim() };try{localStorage.setItem("qprefs",JSON.stringify({days:d.days,ph:d.ph}))}catch(_){}return d}
+async function makeQuoteImg(c,d){
+  const W=1080,P=48,NV="#14226b",GR="#1f9d55",RD="#d62027",TX="#28304a",MU="#6e7891",F='"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif',cv=document.createElement("canvas");cv.width=W;cv.height=6000;const x=cv.getContext("2d");
+  const rr=(a,b,w,h,r,f)=>{x.beginPath();x.moveTo(a+r,b);x.arcTo(a+w,b,a+w,b+h,r);x.arcTo(a+w,b+h,a,b+h,r);x.arcTo(a,b+h,a,b,r);x.arcTo(a,b,a+w,b,r);x.closePath();x.fillStyle=f;x.fill()};
+  const T=(t,a,b,sz,w,col,al)=>{x.font=`${w} ${sz}px ${F}`;x.fillStyle=col;x.textAlign=al||"left";x.fillText(t,a,b)};
+  const wrap=(t,sz,w,mw)=>{x.font=`${w} ${sz}px ${F}`;const o=[];String(t).split("\n").forEach(p=>{let l="";p.split(" ").forEach(wd=>{const q=l?l+" "+wd:wd;if(x.measureText(q).width>mw&&l){o.push(l);l=wd}else l=q});o.push(l)});return o};
+  const now=new Date(),no="SEL-"+now.toISOString().slice(2,10).replace(/-/g,"")+"-"+Math.floor(1000+Math.random()*9000),valid=new Date(now.getTime()+d.days*864e5),dm=z=>z.toLocaleDateString("en-GB",{day:"2-digit",month:"short",year:"numeric"}),n2=v=>(+v).toLocaleString("en-IN",{minimumFractionDigits:2,maximumFractionDigits:2});
+  x.fillStyle="#fff";x.fillRect(0,0,W,6000);
+  let g=x.createLinearGradient(0,0,W,240);g.addColorStop(0,"#0c1650");g.addColorStop(.6,NV);g.addColorStop(1,"#0b5d34");x.fillStyle=g;x.fillRect(0,0,W,236);x.fillStyle=GR;x.fillRect(0,236,W-300,8);x.fillStyle=RD;x.fillRect(W-300,236,300,8);
+  const im=await new Promise(r=>{const i=new Image();i.onload=()=>r(i);i.onerror=()=>r(null);i.src=LOGO});rr(P,44,340,148,22,"#fff");if(im){const lh=300*im.height/im.width;x.drawImage(im,P+20,44+(148-lh)/2,300,lh)}
+  T("QUOTATION",W-P,116,64,"800","#fff","right");T("Quote No: "+no,W-P,156,26,"500","#dfe6ff","right");T("Date: "+dm(now)+"   |   Valid until: "+dm(valid),W-P,192,24,"500","#dfe6ff","right");
+  const L1=[[c.customer_name||"Customer",1],[c.company_name||"",0],[[c.address,c.city,c.state].filter(Boolean).join(", "),0],[c.mobile?"Mobile: "+c.mobile:"",0],[c.email||"",0]].filter(r=>r[0]),
+    L2=[[me.full_name||"Sales Team",1],["SELMEX INDUSTRIES PVT. LTD.",0],[d.ph?"Contact: "+d.ph:"",0],["Hall 2, Stall DD7 · ZAK Doors & Windows Expo, Yashobhoomi, Dwarka",0]].filter(r=>r[0]);
+  const prep=L=>L.flatMap(([t,b])=>wrap(t,b?32:25,b?"700":"400",420).map(s=>({s,b}))),A=prep(L1),B=prep(L2),lh=r=>r.b?42:34,hh=Math.max(A.reduce((n,r)=>n+lh(r),0),B.reduce((n,r)=>n+lh(r),0))+92,y0=284;
+  const card=(a,title,R)=>{rr(a,y0,484,hh,22,"#f3f6fb");x.fillStyle=GR;x.fillRect(a,y0+18,7,hh-36);T(title,a+30,y0+46,20,"700",MU);let y=y0+90;R.forEach(r=>{T(r.s,a+30,y,r.b?32:25,r.b?"700":"400",r.b?NV:TX);y+=lh(r)})};
+  card(P,"QUOTATION FOR",A);card(W-P-484,"PREPARED BY",B);
+  let y=y0+hh+40;const th=()=>{rr(P,y,W-2*P,60,14,NV);[["#",P+22,"left"],["DESCRIPTION",P+68,"left"],["QTY",530,"right"],["UNIT",548,"left"],["RATE",772,"right"],["GST",852,"right"],["AMOUNT",W-P-18,"right"]].forEach(([t,a,al])=>T(t,a,y+39,20,"700","#fff",al));y+=60};th();
+  let sub=0,gst=0;d.items.forEach((it,i)=>{const D=wrap(it.n,26,"600",340),rh=Math.max(78,D.length*36+42),a=it.q*it.r,gg=a*(+it.g||0)/100;sub+=a;gst+=gg;if(i%2===0){x.fillStyle="#f7f9fd";x.fillRect(P,y,W-2*P,rh)}
+    const b0=y+(rh-D.length*36)/2+27;T(String(i+1),P+22,b0,26,"600",MU);D.forEach((l,k)=>T(l,P+68,b0+k*36,26,"600",TX));T(String(+it.q),530,b0,26,"500",TX,"right");T(it.u,548,b0,24,"500",MU);T(n2(it.r),772,b0,26,"500",TX,"right");T((+it.g||0)+"%",852,b0,24,"500",MU,"right");T(n2(a),W-P-18,b0,26,"700",NV,"right");
+    x.strokeStyle="#e6eaf3";x.lineWidth=2;x.beginPath();x.moveTo(P,y+rh);x.lineTo(W-P,y+rh);x.stroke();y+=rh});
+  const Tt=sub+gst,x0=W-P-500;y+=44;T("AMOUNT IN WORDS",P,y+6,18,"700",MU);wrap(nw(Tt)+" Rupees Only",25,"500",470).forEach((l,k)=>T(l,P,y+44+k*34,25,"500",TX));
+  T("Subtotal",x0+10,y+10,26,"500",MU);T("₹"+n2(sub),W-P-10,y+10,26,"600",TX,"right");T("GST",x0+10,y+60,26,"500",MU);T("₹"+n2(gst),W-P-10,y+60,26,"600",TX,"right");
+  g=x.createLinearGradient(x0,0,x0+500,0);g.addColorStop(0,NV);g.addColorStop(1,"#1f5a8a");rr(x0,y+86,500,96,22,g);T("GRAND TOTAL",x0+28,y+143,20,"700","#cfe0ff");T("₹"+n2(Tt),W-P-28,y+146,40,"800","#fff","right");
+  y+=230;
+  y+=70;x.strokeStyle=MU;x.lineWidth=2;x.beginPath();x.moveTo(W-P-380,y);x.lineTo(W-P,y);x.stroke();T("For SELMEX INDUSTRIES PVT. LTD.",W-P,y-16,23,"700",TX,"right");T("Authorised Signatory",W-P,y+36,20,"500",MU,"right");
+  y+=80;x.fillStyle=NV;x.fillRect(0,y,W,84);T("Thank you for your business  ·  Computer-generated quotation",W/2,y+52,22,"600","#fff","center");const H=y+84,out=document.createElement("canvas");out.width=W;out.height=H;out.getContext("2d").drawImage(cv,0,0,W,H,0,0,W,H);
+  const blob=await new Promise(r=>out.toBlob(r,"image/png"));return{blob,no,total:Tt}}
+const dlBlob=(b,n)=>{const a=document.createElement("a");a.href=URL.createObjectURL(b);a.download=n;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),4000)};
+async function sendQuote(mode){const c=QC,d=readQ();if(!d)return;const bt=document.querySelectorAll(".qbar .btn");bt.forEach(x=>x.disabled=true);const old=[...bt].map(x=>x.textContent);bt[mode==="wa"?0:mode==="pv"?1:2].textContent="Preparing…";
+  try{const q=await makeQuoteImg(c,d),fn="Quotation_"+(c.company_name||c.customer_name||"Customer").replace(/[^A-Za-z0-9]+/g,"_")+"_"+q.no+".png",file=new File([q.blob],fn,{type:"image/png"}),
+    msg=`Hello ${fname(c.customer_name)},\n\nThank you for your interest in SELMEX INDUSTRIES PVT. LTD.\n\nPlease find our quotation ${q.no} for ${money(q.total)} (incl. GST). It is valid for ${d.days} days.\n\nFor any query, feel free to call or message us. We would be happy to assist you!\n\nRegards,\n${me.full_name}\nTeam SELMEX INDUSTRIES PVT. LTD.`,
+    mob=/android|iphone|ipad|ipod/i.test(navigator.userAgent)||isIOS;let sent=false;
+    if(mode==="pv"){const u=URL.createObjectURL(q.blob),v=document.createElement("div");v.className="zoomv q";v.innerHTML=`<img src="${u}" alt="Quotation preview">`;v.onclick=()=>{v.remove();URL.revokeObjectURL(u)};document.body.appendChild(v)}
+    else if(mode==="dl"){dlBlob(q.blob,fn);toast("Image saved ✓")}
+    else if(mob&&navigator.canShare&&navigator.canShare({files:[file]})){try{await navigator.share({files:[file],text:msg,title:fn});sent=true}catch(e){if(e.name!=="AbortError")throw e}}
+    else{let cp=false;try{await navigator.clipboard.write([new ClipboardItem({"image/png":q.blob})]);cp=true}catch(_){dlBlob(q.blob,fn)}
+      window.open("https://api.whatsapp.com/send?"+(waNum(c)?"phone="+waNum(c)+"&":"")+"text="+encodeURIComponent(msg),"_blank");toast(cp?"Quotation image copied. In WhatsApp press Ctrl+V to paste it ✓":"Image saved. In WhatsApp tap 📎 to attach it ✓");sent=true}
+    if(sent){const st=nz(c.lead_status),early=st==="Interested"||!st,o={remarks:(c.remarks?c.remarks+"\n":"")+`[${fd(new Date())} · Quotation Given] ${q.no} · ${money(q.total)}`};if(early)o.lead_status="Quotation Sent";if(!c.next_followup_date){const f=new Date(Date.now()+3*864e5);o.next_followup_date=f.toISOString().slice(0,10)}
+      const{error}=await sb.from("expo_customers").update(o).eq("id",c.id);if(error)toast(error.message,1);closeSheet(true);detail(c.id)}}
+  catch(e){toast(e.message||"Could not create the quotation",1)}
+  bt.forEach((x,i)=>{x.disabled=false;x.textContent=old[i]})}
+document.addEventListener("click",e=>{const q=e.target.closest("[data-qs]");if(q)sendQuote(q.dataset.qs)});
 document.addEventListener("click",e=>{const b=e.target.closest(".btn,.step,.mic");if(!b)return;navigator.vibrate&&navigator.vibrate(6);const r=b.getBoundingClientRect(),z=Math.max(r.width,r.height),p=document.createElement("span");p.className="rip";p.style.cssText=`width:${z}px;height:${z}px;left:${e.clientX-r.left-z/2}px;top:${e.clientY-r.top-z/2}px`;b.style.position=b.style.position||"relative";b.style.overflow="hidden";b.appendChild(p);setTimeout(()=>p.remove(),600)});
 const pill=s=>`<span class="pill s-${String(s).replace(/[^A-Za-z]/g,"")}">${esc(LBL[s]||s)}</span>`;
 const row=c=>`<div class="item" onclick="detail('${c.id}')"><div class="av">${esc((c.customer_name||c.company_name||"?").charAt(0).toUpperCase())}</div><div class="mid"><b>${esc(c.customer_name||"—")}</b><small>${esc(c.company_name||"")}${c.city?" · "+esc(c.city):""}</small>${c.created_at?`<small class="dt">📅 ${fd(c.created_at)}${upd(c)?` · ✏️ ${fd(c.updated_at)}`:""}</small>`:""}${c.expo_salespeople?`<small class="by">👤 ${esc(c.expo_salespeople.full_name)}</small>`:""}</div><div class="rt">${pill(c.lead_status)}<div style="display:flex;gap:6px">${waNum(c)?`<a class="call wa" href="${waLink(c)}" target="_blank" rel="noopener" onclick="event.stopPropagation()">💬</a>`:""}${c.mobile?`<a class="call" href="tel:${esc(c.mobile)}" onclick="event.stopPropagation()">📞</a>`:""}</div></div></div>`;
@@ -388,7 +458,7 @@ async function detail(id){M(spin);
   M(`<button class="btn l" onclick="go(last)" style="margin:0 0 10px">‹ Back</button>
   <div class="dg"><div><div class="card"><div style="display:flex;gap:12px;align-items:center"><div class="av">${esc((c.customer_name||c.company_name||"?").charAt(0).toUpperCase())}</div><div class="mid"><b style="font-size:18px">${esc(c.customer_name||"Customer")}</b><small>${esc(c.company_name||"")}${c.city?" · "+esc(c.city):""}</small>${c.expo_salespeople?`<small class="by">👤 Collected by ${esc(c.expo_salespeople.full_name)}</small>`:""}</div>${pill(c.lead_status)}</div>
   ${c.created_at?`<div class="dts">🗓️ Entered <b>${ft(c.created_at)}</b>${upd(c)?`<br>✏️ Last updated <b>${ft(c.updated_at)}</b>`:""}</div>`:""}
-  <div class="acts">${c.mobile?`<a class="btn g" href="tel:${esc(c.mobile)}">📞 Call</a>`:""}${wa?`<a class="btn" href="${waLink(c)}" target="_blank" rel="noopener" style="background:#25a244">💬 WhatsApp</a>`:""}</div></div>
+  <div class="acts">${c.mobile?`<a class="btn g" href="tel:${esc(c.mobile)}">📞 Call</a>`:""}${wa?`<a class="btn" href="${waLink(c)}" target="_blank" rel="noopener" style="background:#25a244">💬 WhatsApp</a>`:""}</div><button class="btn r w" id="qtb" style="margin-top:10px">🧾 Create Quotation</button></div>
   <div class="card"><h3>🔄 Update progress</h3><div class="steps">${STAGES.map(([v,l],i)=>`<button type="button" class="step ${v===nz(c.lead_status)?"on":i<idx&&idx<5?"done":""}" data-v="${v}">${l}</button>`).join("")}</div>
   ${nx?`<button class="btn r w" id="nxt">Move to ${nx[1]} →</button>`:""}
   <label>Next follow-up date</label><input type="date" id="nfd" value="${c.next_followup_date||""}"><label>Update note</label><textarea id="nnt" rows="2" placeholder="e.g. Quotation sent on WhatsApp, sample couriered…"></textarea>${mic("#nnt")}<button class="btn g w" id="upb">Update status</button></div></div>
@@ -397,7 +467,7 @@ async function detail(id){M(spin);
     const{error}=await sb.from("expo_customers").update(o).eq("id",id);if(error)return toast(error.message,1);
     if(d)await sb.from("expo_followups").insert({customer_id:id,due_date:d,note:n||null});toast("Updated ✓ "+(LBL[sel]||sel));detail(id)};
   document.querySelectorAll(".step").forEach(b=>b.onclick=()=>{sel=b.dataset.v;document.querySelectorAll(".step").forEach(x=>x.classList.toggle("on",x===b))});
-  $("#upb").onclick=apply;if(nx)$("#nxt").onclick=()=>{sel=nx[0];apply()};
+  $("#qtb").onclick=()=>quoteBuilder(c,p.map(x=>x.product));$("#upb").onclick=apply;if(nx)$("#nxt").onclick=()=>{sel=nx[0];apply()};
   $("#sv").onclick=async()=>{const v=read(),{error}=await sb.from("expo_customers").update(v).eq("id",id);
     if(!error){await sb.from("expo_customer_products").delete().eq("customer_id",id);const pr=prods();if(pr.length)await sb.from("expo_customer_products").insert(pr.map(x=>({customer_id:id,product:x})))}
     error?toast(error.message,1):toast("Saved ✓")}}
