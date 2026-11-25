@@ -2,7 +2,8 @@
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#14226b">
-<meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="SELMEX Expo">
+<meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="SELMEX Expo"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="application-name" content="SELMEX Expo"><meta name="format-detection" content="telephone=no">
+<link rel="manifest" href="manifest.webmanifest"><link rel="icon" type="image/png" href="icons/favicon-64.png"><link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <title>SELMEX Expo CRM</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
 <style>
@@ -153,8 +154,29 @@ main>h3{color:#fff;font-size:24px}main>p{color:#ffffffb8!important}.sec{color:#f
 main{padding-bottom:130px}
 .chips{gap:10px}.chips span{padding:11px 16px;border-radius:16px;background:#fff;box-shadow:0 1px 2px #14226b10;transition:transform .18s,box-shadow .2s,background .2s}
 .chips label:active span{transform:scale(.95)}.chips input:checked+span{background:linear-gradient(135deg,#14226b,#1f9d55);border-color:transparent;box-shadow:0 8px 18px -8px #14226b99}.chips input:checked+span::after{content:" ✓";font-weight:800}
-.dt{color:var(--mu);font-size:11.5px}.dts{margin-top:12px;padding:10px 12px;border-radius:14px;background:#f1f4f9;font-size:12.5px;color:var(--mu);line-height:1.6}.dts b{color:var(--navy)}</style></head><body>
-<header class="top"><img id="lg" alt="SELMEX"><div class="who hide" id="who"></div><button class="xbtn hide" id="lo" title="Sign out">⎋</button></header>
+.dt{color:var(--mu);font-size:11.5px}.dts{margin-top:12px;padding:10px 12px;border-radius:14px;background:#f1f4f9;font-size:12.5px;color:var(--mu);line-height:1.6}.dts b{color:var(--navy)}
+/* ===== v4: sheets, skeletons, pill nav, install ===== */
+.sk{height:84px;border-radius:22px;margin:12px 0;background:linear-gradient(100deg,#ffffff14 20%,#ffffff38 40%,#ffffff14 60%);background-size:220% 100%;animation:shim 1.2s linear infinite}.sk.s{height:56px}@keyframes shim{to{background-position:-120% 0}}
+.nav{position:fixed}.nav::before{content:"";position:absolute;top:6px;bottom:6px;left:var(--x,10px);width:var(--w,60px);border-radius:20px;background:#ffffff22;transition:left .45s cubic-bezier(.2,.9,.3,1.15),width .35s;pointer-events:none}.nav button{position:relative;z-index:1}
+.sheet-bg{position:fixed;inset:0;z-index:90;background:#050b2e99;backdrop-filter:blur(6px);display:flex;align-items:flex-end;justify-content:center;animation:fadeIn .25s both}
+.sheet{width:100%;max-width:760px;max-height:90vh;max-height:90dvh;background:#f4f7fb;border-radius:28px 28px 0 0;display:flex;flex-direction:column;box-shadow:0 -20px 60px #0009;animation:sheetUp .45s cubic-bezier(.2,.9,.3,1.05) both;padding-bottom:env(safe-area-inset-bottom)}
+@media(min-width:900px){.sheet-bg{align-items:center}.sheet{border-radius:28px;max-height:84vh}}
+.sh-h{padding:16px 18px 10px;display:flex;align-items:center;gap:10px}.sh-h h3{margin:0;color:var(--navy);font-size:19px}.sh-h small{color:var(--mu)}
+.sh-x{border:0;background:#e3e8f2;width:40px;height:40px;border-radius:50%;font-size:18px;cursor:pointer;color:var(--navy)}
+.sh-b{overflow:auto;flex:1;padding:4px 14px 22px;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}.sh-s{margin:0 14px 8px;width:calc(100% - 28px)}
+.sc{background:#fff;border-radius:20px;padding:14px;margin-bottom:10px;box-shadow:0 8px 22px -14px #14226b77;animation:rise .45s both;animation-delay:calc(var(--d,0)*45ms)}
+.sc h4{margin:0;font-size:16px;color:var(--navy)}.sc .l{font-size:13px;margin-top:7px;display:flex;gap:8px;line-height:1.4}.sc .l i{font-style:normal;flex:none}.sc .l b{color:var(--navy)}
+.clamp{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;white-space:pre-line}
+.pc{display:inline-block;background:#eef1f6;border-radius:20px;padding:4px 10px;font-size:11.5px;font-weight:600;margin:8px 6px 0 0}
+.sc .act{display:flex;gap:8px;margin-top:12px}.sc .act .btn{flex:1;min-height:46px;margin:0;font-size:14px;text-decoration:none;padding:0 8px}
+.sheet-bg.out{animation:fadeOut .22s both}.sheet-bg.out .sheet{animation:sheetDown .22s both}
+@keyframes sheetUp{from{transform:translateY(70px);opacity:0}to{transform:none;opacity:1}}@keyframes sheetDown{to{transform:translateY(70px);opacity:0}}@keyframes fadeIn{from{opacity:0}}@keyframes fadeOut{to{opacity:0}}
+.bar2[data-d]{cursor:pointer;padding:6px 8px;margin:2px -8px;border-radius:10px;transition:background .2s}.bar2[data-d]:active{background:#14226b14}.stat[data-d]{cursor:pointer}.stat[data-d]:active{transform:scale(.96)}
+@media(hover:hover){.bar2[data-d]:hover{background:#14226b0d}}
+.inst-l{display:block;width:100%;margin-top:14px;min-height:46px;border:1.5px dashed #14226b55;background:#14226b0a;color:var(--navy);border-radius:16px;font-weight:700;font-family:inherit;cursor:pointer}.inst-l.hide{display:none}
+body.lgn{overscroll-behavior:none}
+</style></head><body>
+<header class="top"><img id="lg" alt="SELMEX"><div class="who hide" id="who"></div><button class="xbtn hide" id="inst" title="Install app" onclick="installApp()">📲</button><button class="xbtn hide" id="lo" title="Sign out">⎋</button></header>
 <main id="m"><div class="sp"></div></main><nav class="nav hide" id="nav"></nav><div id="toast"></div>
 <script src="config.js"></script>
 <script>
@@ -182,12 +204,12 @@ let me=null,imgs={front:null,back:null},ext={},L={uid:null,page:0},last="dash";
 $("#lg").src=LOGO;
 const toast=(t,bad)=>{const e=$("#toast");e.textContent=t;e.className="show"+(bad?" bad":"");clearTimeout(toast.t);toast.t=setTimeout(()=>e.className="",3500)};
 const M=h=>{const m=$("#m");m.style.animation="none";void m.offsetHeight;m.style.animation="";m.innerHTML=h;scrollTo(0,0);anim()};
-const spin='<div class="sp"></div>',COL=["#2749c9","#6a2cb5","#b25200","#c99a00","#1f9d55"],stat=(n,v)=>{const i=STAGES.findIndex(x=>x[1]===n);return `<div class="stat" style="--c:${COL[i]||"#14226b"}"><div class="ic">${["🆕","📄","🧪","🔔","🏆"][i]||"📊"}</div><b data-n="${v}">0</b><span>${n}</span></div>`};
+const spin='<div class="sk"></div><div class="sk s"></div><div class="sk"></div><div class="sk s"></div>',COL=["#2749c9","#6a2cb5","#b25200","#c99a00","#1f9d55"],stat=(n,v,d)=>{const i=STAGES.findIndex(x=>x[1]===n);return `<div class="stat"${d!==undefined?` data-d="${d}"`:""} style="--c:${COL[i]||"#14226b"}"><div class="ic">${["🆕","📄","🧪","🔔","🏆"][i]||"📊"}</div><b data-n="${v}">0</b><span>${n}</span></div>`};
 const HERO=`<div class="hero"><h2>Zak Doors &amp; Windows Expo</h2><p>SELMEX INDUSTRIES PVT. LTD. · Packaging &amp; Bonding Solutions</p><div class="pills"><span>📅 10–12 Dec 2026</span><span>📍 Yashobhoomi (IICC), New Delhi</span><span>🏢 Hall 2 · Stall DD7</span></div></div>`;
 const cnts=c=>STAGES.slice(0,5).map(([v])=>c.filter(x=>nz(x.lead_status)===v).length);
 const pipe=a=>{const T=a.reduce((x,y)=>x+y,0),t=T||1;return `<div class="card"><h3 style="font-size:16px">Pipeline · ${T} customers</h3><div class="pipe">${a.map((n,i)=>`<i style="--w:${n/t*100}%;background:${COL[i]}"></i>`).join("")}</div><div class="lgd">${a.map((n,i)=>`<span style="--c:${COL[i]}"><s></s>${STAGES[i][1]} <b>${n}</b></span>`).join("")}</div></div>`};
 const greet=()=>{const h=new Date().getHours(),g=h<12?"Good morning":h<17?"Good afternoon":"Good evening",d=Math.ceil((new Date("2026-12-10T00:00")-new Date())/864e5);return `<div class="hero2"><div class="blob b1"></div><div class="blob b2"></div><small>${d>0?"⏳ "+d+" days to expo":d>-3?"🔥 Expo is live":"✅ Expo wrapped up"}</small><h2>${g},<br><span>${esc((me.full_name||"").split(" ")[0])}</span> 👋</h2><p>Zak Doors &amp; Windows Expo · Hall 2, Stall DD7 · Yashobhoomi, Delhi</p></div>`};
-function anim(){document.querySelectorAll("#m .stat,#m .item,#m .lbc,#m .card").forEach((e,i)=>e.style.setProperty("--d",Math.min(i,14)));
+function anim(){requestAnimationFrame(()=>{const n=$("#nav"),a=n&&n.querySelector(".on:not(.fab)");if(a){n.style.setProperty("--x",a.offsetLeft+"px");n.style.setProperty("--w",a.offsetWidth+"px")}});document.querySelectorAll("#m .stat,#m .item,#m .lbc,#m .card").forEach((e,i)=>e.style.setProperty("--d",Math.min(i,14)));
   document.querySelectorAll("#m [data-n]").forEach(e=>{const n=+e.dataset.n,t0=performance.now(),f=t=>{const p=Math.min(1,(t-t0)/900);e.textContent=Math.round(n*(1-Math.pow(1-p,3)));if(p<1)requestAnimationFrame(f)};requestAnimationFrame(f)})}
 
 let RL=[],RD=[];
@@ -196,7 +218,26 @@ document.addEventListener("click",async e=>{
   const z=e.target.closest(".thumbs img,.tile>img");if(z){const v=document.createElement("div");v.className="zoomv";v.innerHTML=`<img src="${z.src}">`;v.onclick=()=>v.remove();document.body.appendChild(v);return}
   const a=e.target.closest("[data-rot]");if(a){const w=a.closest(".th"),i=+w.dataset.i;RD[i]=(((RD[i]||0)+ +a.dataset.rot)%360+360)%360;w.querySelector("img").src=await rotUrl(RL[i].url,RD[i]);return}
   const t=e.target.closest("[data-trot]");if(t){const k=t.dataset.ts,f=imgs[k];if(!f)return;const nb=await rotBlob(f.blob,+t.dataset.trot);imgs[k]={blob:nb,url:URL.createObjectURL(nb)};$("#t-"+k).outerHTML=tile(k,k==="front"?"Front side":"Back side",k==="front"?"Required":"Optional")}});
-document.addEventListener("pointerdown",e=>{const b=e.target.closest(".btn,.item,.step,.mic");if(!b)return;const r=b.getBoundingClientRect(),z=Math.max(r.width,r.height),p=document.createElement("span");p.className="rip";p.style.cssText=`width:${z}px;height:${z}px;left:${e.clientX-r.left-z/2}px;top:${e.clientY-r.top-z/2}px`;b.style.position=b.style.position||"relative";b.style.overflow="hidden";b.appendChild(p);setTimeout(()=>p.remove(),600)});
+
+let DRL=[],PMAP={},IP=null;
+const isIOS=/iphone|ipad|ipod/i.test(navigator.userAgent)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1),isSA=matchMedia("(display-mode: standalone)").matches||navigator.standalone===true;
+function closeSheet(now){const o=document.querySelector(".sheet-bg");if(!o)return;document.body.style.overflow="";if(now)return o.remove();o.classList.add("out");setTimeout(()=>o.remove(),230)}
+function openSheet(t,h,sub){closeSheet(true);const o=document.createElement("div");o.className="sheet-bg";o.innerHTML=`<div class="sheet" role="dialog" aria-modal="true"><div class="sh-h"><div style="flex:1"><h3>${esc(t)}</h3>${sub?`<small>${sub}</small>`:""}</div><button class="sh-x" onclick="closeSheet()" aria-label="Close">✕</button></div>${h}</div>`;o.onclick=e=>{if(e.target===o)closeSheet()};document.body.appendChild(o);document.body.style.overflow="hidden"}
+const cardC=(c,i)=>`<div class="sc" style="--d:${Math.min(i,10)}"><div style="display:flex;gap:10px;align-items:flex-start;justify-content:space-between"><div><h4>${esc(c.company_name||c.customer_name||"—")}</h4><small style="color:var(--mu)">${esc(c.customer_name||"")}${c.designation?" · "+esc(c.designation):""}</small></div>${pill(c.lead_status)}</div>
+${c.mobile?`<div class="l"><i>📞</i><span>${esc(c.mobile)}${c.alternate_mobile?" · "+esc(c.alternate_mobile):""}</span></div>`:""}${c.email?`<div class="l"><i>✉️</i><span>${esc(c.email)}</span></div>`:""}${c.address||c.city?`<div class="l"><i>📍</i><span>${esc([c.address,c.city].filter(Boolean).join(", "))}</span></div>`:""}
+<div class="l"><i>👤</i><span>${esc((c.expo_salespeople||{}).full_name||"—")} · 🗓️ ${fd(c.created_at)}</span></div>${(PMAP[c.id]||[]).map(p=>`<span class="pc">${PICO[p]||""} ${esc(p)}</span>`).join("")}
+${c.requirements?`<div class="l"><i>📝</i><span>${esc(c.requirements)}</span></div>`:""}${c.remarks?`<div class="l"><i>💬</i><span class="clamp">${esc(c.remarks)}</span></div>`:""}
+<div class="act">${c.mobile?`<a class="btn g" href="tel:${esc(c.mobile)}">📞 Call</a>`:""}${waNum(c)?`<a class="btn" style="background:#25a244" href="${waLink(c)}" target="_blank" rel="noopener">💬 WhatsApp</a>`:""}<button class="btn r" onclick="closeSheet(true);detail('${c.id}')">Open ›</button></div></div>`;
+function sheetList(t,list){openSheet(t,`<input class="sh-s" id="shs" placeholder="🔍 Search in this list…"><div class="sh-b" id="shl">${list.length?list.map(cardC).join(""):'<div class="sc">No customers here yet.</div>'}</div>`,list.length+" customer"+(list.length===1?"":"s"));const q=$("#shs");q.oninput=()=>{const v=q.value.toLowerCase();document.querySelectorAll("#shl .sc").forEach(e=>e.style.display=e.textContent.toLowerCase().includes(v)?"":"none")}}
+document.addEventListener("click",e=>{const b=e.target.closest("[data-d]");if(b&&DRL[+b.dataset.d])DRL[+b.dataset.d]()});
+document.addEventListener("keydown",e=>{if(e.key==="Escape")closeSheet()});
+function showInst(){const on=!isSA,w=$("#who");const b=$("#inst");if(b)b.classList.toggle("hide",!(on&&w&&!w.classList.contains("hide")));document.querySelectorAll(".inst-l").forEach(x=>x.classList.toggle("hide",!on))}
+async function installApp(){if(IP){IP.prompt();try{await IP.userChoice}catch(_){}IP=null;return showInst()}
+  openSheet("Install SELMEX Expo app",isIOS?`<div class="sh-b"><div class="sc"><div class="l"><i>1️⃣</i><span>Open this page in <b>Safari</b>.</span></div><div class="l"><i>2️⃣</i><span>Tap the <b>Share</b> button (square with an arrow ⬆️).</span></div><div class="l"><i>3️⃣</i><span>Scroll down and tap <b>Add to Home Screen</b>.</span></div><div class="l"><i>4️⃣</i><span>Tap <b>Add</b>. The app icon appears on your home screen.</span></div></div></div>`:`<div class="sh-b"><div class="sc"><div class="l"><i>1️⃣</i><span>Open this page in <b>Chrome</b>.</span></div><div class="l"><i>2️⃣</i><span>Tap the <b>⋮</b> menu at the top right.</span></div><div class="l"><i>3️⃣</i><span>Tap <b>Install app</b> (or <b>Add to Home screen</b>).</span></div><div class="l"><i>4️⃣</i><span>Tap <b>Install</b>. The app icon appears on your home screen.</span></div></div></div>`)}
+addEventListener("beforeinstallprompt",e=>{e.preventDefault();IP=e;showInst()});addEventListener("appinstalled",()=>{IP=null;toast("App installed ✓");showInst()});
+addEventListener("offline",()=>toast("You are offline. Changes can't be saved until you reconnect.",1));addEventListener("online",()=>toast("Back online ✓"));
+if("serviceWorker"in navigator&&location.protocol==="https:")addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}));
+document.addEventListener("pointerdown",e=>{const b=e.target.closest(".btn,.item,.step,.mic");if(!b)return;navigator.vibrate&&navigator.vibrate(6);const r=b.getBoundingClientRect(),z=Math.max(r.width,r.height),p=document.createElement("span");p.className="rip";p.style.cssText=`width:${z}px;height:${z}px;left:${e.clientX-r.left-z/2}px;top:${e.clientY-r.top-z/2}px`;b.style.position=b.style.position||"relative";b.style.overflow="hidden";b.appendChild(p);setTimeout(()=>p.remove(),600)});
 const pill=s=>`<span class="pill s-${String(s).replace(/[^A-Za-z]/g,"")}">${esc(LBL[s]||s)}</span>`;
 const row=c=>`<div class="item" onclick="detail('${c.id}')"><div class="av">${esc((c.customer_name||c.company_name||"?").charAt(0).toUpperCase())}</div><div class="mid"><b>${esc(c.customer_name||"—")}</b><small>${esc(c.company_name||"")}${c.city?" · "+esc(c.city):""}</small>${c.created_at?`<small class="dt">📅 ${fd(c.created_at)}${upd(c)?` · ✏️ ${fd(c.updated_at)}`:""}</small>`:""}${c.expo_salespeople?`<small class="by">👤 ${esc(c.expo_salespeople.full_name)}</small>`:""}</div><div class="rt">${pill(c.lead_status)}<div style="display:flex;gap:6px">${waNum(c)?`<a class="call wa" href="${waLink(c)}" target="_blank" rel="noopener" onclick="event.stopPropagation()">💬</a>`:""}${c.mobile?`<a class="call" href="tel:${esc(c.mobile)}" onclick="event.stopPropagation()">📞</a>`:""}</div></div></div>`;
 
@@ -209,16 +250,16 @@ async function init(){
   $("#nav").innerHTML=T.map(t=>`<button data-p="${t[0]}" class="${t[0]==="up"?"fab":""}"><i>${t[1]}</i>${t[2]}</button>`).join("");
   $("#nav").onclick=e=>{const b=e.target.closest("button");if(b)go(b.dataset.p)};go(isAdm()?"adm":"dash")}
 function setUI(on){document.body.classList.remove("lgn");$("#who").classList.toggle("hide",!on);$("#lo").classList.toggle("hide",!on);$("#nav").classList.toggle("hide",!on);
-  if(on)$("#who").innerHTML=`<b>${esc(me.full_name)}</b><span class="badge ${isAdm()?"adm":""}">${isAdm()?"Management":"Salesperson"}</span>`}
+  showInst();if(on)$("#who").innerHTML=`<b>${esc(me.full_name)}</b><span class="badge ${isAdm()?"adm":""}">${isAdm()?"Management":"Salesperson"}</span>`}
 $("#lo").onclick=()=>out();
 function login(){setUI(false);document.body.classList.add("lgn");
   M(`<div class="lg2"><div class="lg2-l"><div class="orb o1"></div><div class="orb o2"></div><div class="orb o3"></div><div class="lg2-brand"><img class="lg2-logo" src="${LOGO}" alt="SELMEX"><small>ZAK DOORS &amp; WINDOWS EXPO · 2026</small><h1>Capture every lead.<br><span>Close every deal.</span></h1><p>SELMEX INDUSTRIES PVT. LTD. · Packaging &amp; Bonding Solutions</p><div class="pills"><span>📅 10–12 Dec 2026</span><span>📍 Yashobhoomi (IICC), New Delhi</span><span>🏢 Hall 2 · Stall DD7</span></div></div></div>
   <div class="lg2-r"><div class="lg2-card"><h2>Welcome back 👋</h2><p>Sign in to your Expo CRM</p>
   <div class="fl"><input id="e" type="email" placeholder=" " autocomplete="username"><label for="e">Email</label></div>
   <div class="fl"><input id="p" type="password" placeholder=" " autocomplete="current-password"><label for="p">Password</label><button type="button" id="eye">Show</button></div>
-  <button class="btn r w" id="lgb"><span>Login</span></button><div id="le" class="err"></div><div class="lg2-f">🔒 Secure team login</div></div></div></div>`);
+  <button class="btn r w" id="lgb"><span>Login</span></button><div id="le" class="err"></div><button type="button" class="inst-l hide" onclick="installApp()">📲 Install app on this device</button><div class="lg2-f">🔒 Secure team login</div></div></div></div>`);
   $("#eye").onclick=()=>{const p=$("#p"),h=p.type==="password";p.type=h?"text":"password";$("#eye").textContent=h?"Hide":"Show";p.focus()};
-  const go=async()=>{const b=$("#lgb");b.disabled=true;b.innerHTML='<span class="bsp"></span> Signing in…';$("#le").textContent="";
+  showInst();const go=async()=>{const b=$("#lgb");b.disabled=true;b.innerHTML='<span class="bsp"></span> Signing in…';$("#le").textContent="";
     const{error}=await sb.auth.signInWithPassword({email:$("#e").value.trim(),password:$("#p").value});
     if(error){$("#le").textContent=error.message;b.disabled=false;b.innerHTML="<span>Login</span>";const c=$(".lg2-card");c.classList.remove("shake");void c.offsetWidth;c.classList.add("shake")}else init()};
   $("#lgb").onclick=go;$("#p").onkeydown=e=>e.key==="Enter"&&go()}
@@ -313,14 +354,16 @@ async function lb(){let{data=[]}=await sb.rpc("expo_leaderboard");
   data=data.filter(r=>pos(r.full_name)<99).sort((x,y)=>pos(x.full_name)-pos(y.full_name));
   M(`<div class="lbs"><h3>⭐ Star Performers</h3><p style="color:var(--mu);font-size:13px;margin:-4px 0 12px">SELMEX Expo team · only totals are shown, customer details stay private.</p>${data.map((r,i)=>`<div class="lbc t${Math.min(i,3)} ${r.full_name===me.full_name?"me":""}"><div class="pos">${md[i]||i+1}</div><div class="av">${esc(r.full_name.charAt(0).toUpperCase())}</div><div class="mid"><b>${esc(r.full_name)}${r.full_name===me.full_name?" (you)":""}</b><small>${r.total} customers collected</small><div class="meter"><i style="width:${Math.max(4,r.total/mx*100)}%"></i></div></div><div class="st3"><div><b>${r.total}</b>Customers</div><div><b>${r.interested}</b>Active leads</div><div><b>${r.converted}</b>Orders won</div></div></div>`).join("")||'<div class="card">No data yet.</div>'}</div>`)}
 
-async function adm(){const[{data:c0=[]},{data:pr0=[]},{data:l0=[]},{data:sp=[]}]=await Promise.all([sb.from("expo_customers").select("id,salesperson_id,lead_status,city,industry,next_followup_date,card_image_path"),sb.from("expo_customer_products").select("customer_id,product"),sb.rpc("expo_leaderboard"),sb.from("expo_salespeople").select("id").eq("show_on_leaderboard",true)]);
+async function adm(){DRL.length=0;const[{data:c0=[]},{data:pr0=[]},{data:l0=[]},{data:sp=[]}]=await Promise.all([sb.from("expo_customers").select("id,salesperson_id,lead_status,city,industry,next_followup_date,customer_name,company_name,designation,mobile,alternate_mobile,email,address,requirements,remarks,created_at,updated_at,expo_salespeople(full_name)"),sb.from("expo_customer_products").select("customer_id,product"),sb.rpc("expo_leaderboard"),sb.from("expo_salespeople").select("id").eq("show_on_leaderboard",true)]);
   const ok=new Set(sp.map(x=>x.id)),c=c0.filter(x=>ok.has(x.salesperson_id)),cid=new Set(c.map(x=>x.id)),pr=pr0.filter(x=>cid.has(x.customer_id)),LBO=["nitish","hanumant","manjeet","preeti"],l=l0.filter(r=>LBO.some(k=>String(r.full_name).toLowerCase().includes(k)));
   const cnt=(a,f)=>Object.entries(a.reduce((o,x)=>{const k=f(x)||"Not specified";o[k]=(o[k]||0)+1;return o},{})).sort((a,b)=>b[1]-a[1]),
-  box=(t,r,n=6)=>{const mx=r[0]?r[0][1]:1,bar=x=>`<div class="bar2">${esc(x[0])} <b style="float:right">${x[1]}</b><div style="--w:${Math.max(6,x[1]/mx*100)}%"></div></div>`;
+  box=(t,r,n=6,pk,lbl)=>{const mx=r[0]?r[0][1]:1,bar=x=>`<div class="bar2"${pk?` data-d="${DRL.push(()=>sheetList(lbl+": "+x[0],pk(x[0])))-1}"`:""}>${esc(x[0])} <b style="float:right">${x[1]}</b><div style="--w:${Math.max(6,x[1]/mx*100)}%"></div></div>`;
     return `<div class="card"><h3 style="font-size:16px">${t}</h3>${r.slice(0,n).map(bar).join("")||"<small>No data yet</small>"}${r.length>n?`<div class="hide">${r.slice(n).map(bar).join("")}</div><button class="btn l w" style="min-height:42px" onclick="const d=this.previousElementSibling;d.classList.toggle('hide');this.textContent=d.classList.contains('hide')?'Show all (${r.length})':'Show less'">Show all (${r.length})</button>`:""}</div>`},
+  PMAP=pr.reduce((o,p)=>((o[p.customer_id]=o[p.customer_id]||[]).push(p.product),o),{}),
   city=x=>(x.city||"").trim().toLowerCase().replace(/\b\w/g,m=>m.toUpperCase());
-  M(`${greet()}<div class="grid">${cnts(c).map((n,i)=>stat(STAGES[i][1],n)).join("")}</div>
-  <div class="cols">${box("Salesperson-wise customers",l.map(r=>[r.full_name,r.total]))}${box("Product-wise interest",cnt(pr,x=>x.product))}${box("Industry-wise",cnt(c,x=>normInd(x.industry)))}${box("City-wise",cnt(c,city))}</div>`)}
+  M(`${greet()}<div class="grid">${cnts(c).map((n,i)=>stat(STAGES[i][1],n,DRL.push(()=>sheetList(STAGES[i][1],c.filter(x=>nz(x.lead_status)===STAGES[i][0])))-1)).join("")}</div>
+  <p style="font-size:13px;margin:2px 4px 12px">👆 Tap any stage, bar, city, product or salesperson to see company details.</p>
+  <div class="cols">${box("Salesperson-wise customers",l.map(r=>[r.full_name,r.total]),6,n=>c.filter(x=>(x.expo_salespeople||{}).full_name===n),"Salesperson")}${box("Product-wise interest",cnt(pr,x=>x.product),6,n=>{const s=new Set(pr.filter(p=>p.product===n).map(p=>p.customer_id));return c.filter(x=>s.has(x.id))},"Product")}${box("Industry-wise",cnt(c,x=>normInd(x.industry)),6,n=>c.filter(x=>(normInd(x.industry)||"Not specified")===n),"Industry")}${box("City-wise",cnt(c,city),6,n=>c.filter(x=>(city(x)||"Not specified")===n),"City")}</div>`)}
 
 
 document.addEventListener("click",e=>{const b=e.target.closest(".mic");if(!b)return;const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
