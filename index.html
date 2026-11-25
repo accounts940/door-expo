@@ -175,6 +175,34 @@ main{padding-bottom:130px}
 @media(hover:hover){.bar2[data-d]:hover{background:#14226b0d}}
 .inst-l{display:block;width:100%;margin-top:14px;min-height:46px;border:1.5px dashed #14226b55;background:#14226b0a;color:var(--navy);border-radius:16px;font-weight:700;font-family:inherit;cursor:pointer}.inst-l.hide{display:none}
 body.lgn{overscroll-behavior:none}
+
+/* ===== v5: smoothness pass (no scroll jank) ===== */
+html{scroll-behavior:auto}
+body{background:#0c1650}
+body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;mix-blend-mode:normal;opacity:1;
+ background:radial-gradient(circle at 92% -4%,#d6202755 0,transparent 38%),radial-gradient(circle at 4% 104%,#1f9d5555 0,transparent 42%),linear-gradient(135deg,#0c1650,#14226b 50%,#0b5d34);transform:translateZ(0)}
+body::after{display:none}
+.top{background:#0c1650f4;backdrop-filter:none;-webkit-backdrop-filter:none}
+.nav{background:#0c1650f2;backdrop-filter:none;-webkit-backdrop-filter:none;transform:translateZ(0)}
+.card,.item,.hero2,.lbc,.sheet-bg,.lg2-card{backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
+.card,.item{background:#fff}
+.sheet-bg{background:#050b2ecc}
+.item{content-visibility:visible;animation:none}.item.in{animation:rise .5s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(var(--d,0)*45ms)}
+.btn,.item,.step,.mic,.nav button{transition:transform .18s cubic-bezier(.2,.8,.2,1),background-color .2s}
+@media(hover:hover){.item:hover{box-shadow:none;transform:translateY(-2px)}.btn:hover{box-shadow:none;transform:translateY(-1px)}}
+.hero2{background:radial-gradient(circle at 92% 0,#d6202777,transparent 45%),radial-gradient(circle at 70% 125%,#1f9d5577,transparent 48%),linear-gradient(125deg,#ffffff24,#ffffff0d)}
+.blob,.orb{display:none}
+.lg2-l{background:radial-gradient(circle at 90% 0,#d6202777,transparent 45%),radial-gradient(circle at 8% 100%,#1f9d5577,transparent 50%)}
+.lg2-l::before{mix-blend-mode:normal;opacity:.16}
+.bar2 div{width:var(--w)!important;transform:scaleX(0);transform-origin:left center;animation:grow .9s cubic-bezier(.2,.8,.2,1) .2s forwards}
+@keyframes grow{to{transform:scaleX(1)}}
+.nav::before{left:0;transform:translateX(var(--x,10px));transition:transform .45s cubic-bezier(.2,.9,.3,1.15),width .3s}
+.card,.stat,.lbc,.sc,.item.in{will-change:auto}
+main{contain:layout style}
+.inst-h{position:absolute;right:16px;top:16px;z-index:2;border:0;border-radius:20px;padding:0 14px;min-height:38px;background:#ffffff2e;color:#fff;font-weight:700;font-size:13px;font-family:inherit;cursor:pointer;border:1px solid #ffffff40}
+.inst-h:active{transform:scale(.95)}
+@media(max-width:420px){.inst-h{top:auto;bottom:14px}}
+@media(prefers-reduced-motion:reduce){.nav::before{transition:none}}
 </style></head><body>
 <header class="top"><img id="lg" alt="SELMEX"><div class="who hide" id="who"></div><button class="xbtn hide" id="inst" title="Install app" onclick="installApp()">📲</button><button class="xbtn hide" id="lo" title="Sign out">⎋</button></header>
 <main id="m"><div class="sp"></div></main><nav class="nav hide" id="nav"></nav><div id="toast"></div>
@@ -208,8 +236,8 @@ const spin='<div class="sk"></div><div class="sk s"></div><div class="sk"></div>
 const HERO=`<div class="hero"><h2>Zak Doors &amp; Windows Expo</h2><p>SELMEX INDUSTRIES PVT. LTD. · Packaging &amp; Bonding Solutions</p><div class="pills"><span>📅 10–12 Dec 2026</span><span>📍 Yashobhoomi (IICC), New Delhi</span><span>🏢 Hall 2 · Stall DD7</span></div></div>`;
 const cnts=c=>STAGES.slice(0,5).map(([v])=>c.filter(x=>nz(x.lead_status)===v).length);
 const pipe=a=>{const T=a.reduce((x,y)=>x+y,0),t=T||1;return `<div class="card"><h3 style="font-size:16px">Pipeline · ${T} customers</h3><div class="pipe">${a.map((n,i)=>`<i style="--w:${n/t*100}%;background:${COL[i]}"></i>`).join("")}</div><div class="lgd">${a.map((n,i)=>`<span style="--c:${COL[i]}"><s></s>${STAGES[i][1]} <b>${n}</b></span>`).join("")}</div></div>`};
-const greet=()=>{const h=new Date().getHours(),g=h<12?"Good morning":h<17?"Good afternoon":"Good evening",d=Math.ceil((new Date("2026-12-10T00:00")-new Date())/864e5);return `<div class="hero2"><div class="blob b1"></div><div class="blob b2"></div><small>${d>0?"⏳ "+d+" days to expo":d>-3?"🔥 Expo is live":"✅ Expo wrapped up"}</small><h2>${g},<br><span>${esc((me.full_name||"").split(" ")[0])}</span> 👋</h2><p>Zak Doors &amp; Windows Expo · Hall 2, Stall DD7 · Yashobhoomi, Delhi</p></div>`};
-function anim(){requestAnimationFrame(()=>{const n=$("#nav"),a=n&&n.querySelector(".on:not(.fab)");if(a){n.style.setProperty("--x",a.offsetLeft+"px");n.style.setProperty("--w",a.offsetWidth+"px")}});document.querySelectorAll("#m .stat,#m .item,#m .lbc,#m .card").forEach((e,i)=>e.style.setProperty("--d",Math.min(i,14)));
+const greet=()=>{const h=new Date().getHours(),g=h<12?"Good morning":h<17?"Good afternoon":"Good evening",d=Math.ceil((new Date("2026-12-10T00:00")-new Date())/864e5);return `<div class="hero2"><div class="blob b1"></div><div class="blob b2"></div><small>${d>0?"⏳ "+d+" days to expo":d>-3?"🔥 Expo is live":"✅ Expo wrapped up"}</small>${isSA?"":`<button type="button" class="inst-h" onclick="installApp()">📲 Install app</button>`}<h2>${g},<br><span>${esc((me.full_name||"").split(" ")[0])}</span> 👋</h2><p>Zak Doors &amp; Windows Expo · Hall 2, Stall DD7 · Yashobhoomi, Delhi</p></div>`};
+function anim(){document.querySelectorAll("#m .item").forEach((e,i)=>{if(i<12){e.style.setProperty("--d",i);e.classList.add("in")}});requestAnimationFrame(()=>{const n=$("#nav"),a=n&&n.querySelector(".on:not(.fab)");if(a){n.style.setProperty("--x",a.offsetLeft+"px");n.style.setProperty("--w",a.offsetWidth+"px")}});document.querySelectorAll("#m .stat,#m .item,#m .lbc,#m .card").forEach((e,i)=>e.style.setProperty("--d",Math.min(i,14)));
   document.querySelectorAll("#m [data-n]").forEach(e=>{const n=+e.dataset.n,t0=performance.now(),f=t=>{const p=Math.min(1,(t-t0)/900);e.textContent=Math.round(n*(1-Math.pow(1-p,3)));if(p<1)requestAnimationFrame(f)};requestAnimationFrame(f)})}
 
 let RL=[],RD=[];
@@ -232,12 +260,19 @@ function sheetList(t,list){openSheet(t,`<input class="sh-s" id="shs" placeholder
 document.addEventListener("click",e=>{const b=e.target.closest("[data-d]");if(b&&DRL[+b.dataset.d])DRL[+b.dataset.d]()});
 document.addEventListener("keydown",e=>{if(e.key==="Escape")closeSheet()});
 function showInst(){const on=!isSA,w=$("#who");const b=$("#inst");if(b)b.classList.toggle("hide",!(on&&w&&!w.classList.contains("hide")));document.querySelectorAll(".inst-l").forEach(x=>x.classList.toggle("hide",!on))}
+const gd=l=>`<div class="sh-b"><div class="sc">${l.map((t,i)=>`<div class="l"><i>${["1️⃣","2️⃣","3️⃣","4️⃣"][i]}</i><span>${t}</span></div>`).join("")}</div></div>`;
 async function installApp(){if(IP){IP.prompt();try{await IP.userChoice}catch(_){}IP=null;return showInst()}
-  openSheet("Install SELMEX Expo app",isIOS?`<div class="sh-b"><div class="sc"><div class="l"><i>1️⃣</i><span>Open this page in <b>Safari</b>.</span></div><div class="l"><i>2️⃣</i><span>Tap the <b>Share</b> button (square with an arrow ⬆️).</span></div><div class="l"><i>3️⃣</i><span>Scroll down and tap <b>Add to Home Screen</b>.</span></div><div class="l"><i>4️⃣</i><span>Tap <b>Add</b>. The app icon appears on your home screen.</span></div></div></div>`:`<div class="sh-b"><div class="sc"><div class="l"><i>1️⃣</i><span>Open this page in <b>Chrome</b>.</span></div><div class="l"><i>2️⃣</i><span>Tap the <b>⋮</b> menu at the top right.</span></div><div class="l"><i>3️⃣</i><span>Tap <b>Install app</b> (or <b>Add to Home screen</b>).</span></div><div class="l"><i>4️⃣</i><span>Tap <b>Install</b>. The app icon appears on your home screen.</span></div></div></div>`)}
+  const ua=navigator.userAgent,and=/android/i.test(ua),edge=/edg/i.test(ua),fx=/firefox/i.test(ua),saf=/safari/i.test(ua)&&!/chrome|crios|android|edg|fxios/i.test(ua);
+  if(isIOS)return openSheet("Install on iPhone / iPad",gd(["Open this page in <b>Safari</b> (not Chrome).","Tap the <b>Share</b> button (square with an arrow ⬆️).","Scroll down and tap <b>Add to Home Screen</b>.","Tap <b>Add</b>. The app icon appears on your home screen."]));
+  if(and)return openSheet("Install on Android",gd(["Open this page in <b>Chrome</b>.","Tap the <b>⋮</b> menu at the top right.","Tap <b>Install app</b> (or <b>Add to Home screen</b>).","Tap <b>Install</b>."]));
+  if(fx)return openSheet("Install on computer",gd(["Firefox on a computer can't install web apps.","Open this same page in <b>Google Chrome</b> or <b>Microsoft Edge</b>.","Then tap <b>📲 Install app</b> again."]));
+  if(saf)return openSheet("Install on Mac (Safari)",gd(["In the top menu bar click <b>File</b>.","Click <b>Add to Dock…</b>.","Click <b>Add</b>."]));
+  if(edge)return openSheet("Install on computer (Edge)",gd(["Click the <b>⋯</b> menu at the top right.","Click <b>Apps → Install this site as an app</b>.","Click <b>Install</b>.","Tip: not in an InPrivate window."]));
+  openSheet("Install on computer (Chrome)",gd(["Look at the right end of the address bar for the <b>install icon</b> (a small screen with a down arrow) and click it.","If you don't see it: click <b>⋮</b> (top right) → <b>Cast, save and share → Install page as app</b>.","Click <b>Install</b>. Not in an Incognito window.","The app opens in its own window and gets a desktop shortcut."]))}
 addEventListener("beforeinstallprompt",e=>{e.preventDefault();IP=e;showInst()});addEventListener("appinstalled",()=>{IP=null;toast("App installed ✓");showInst()});
 addEventListener("offline",()=>toast("You are offline. Changes can't be saved until you reconnect.",1));addEventListener("online",()=>toast("Back online ✓"));
 if("serviceWorker"in navigator&&location.protocol==="https:")addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}));
-document.addEventListener("pointerdown",e=>{const b=e.target.closest(".btn,.item,.step,.mic");if(!b)return;navigator.vibrate&&navigator.vibrate(6);const r=b.getBoundingClientRect(),z=Math.max(r.width,r.height),p=document.createElement("span");p.className="rip";p.style.cssText=`width:${z}px;height:${z}px;left:${e.clientX-r.left-z/2}px;top:${e.clientY-r.top-z/2}px`;b.style.position=b.style.position||"relative";b.style.overflow="hidden";b.appendChild(p);setTimeout(()=>p.remove(),600)});
+document.addEventListener("click",e=>{const b=e.target.closest(".btn,.step,.mic");if(!b)return;navigator.vibrate&&navigator.vibrate(6);const r=b.getBoundingClientRect(),z=Math.max(r.width,r.height),p=document.createElement("span");p.className="rip";p.style.cssText=`width:${z}px;height:${z}px;left:${e.clientX-r.left-z/2}px;top:${e.clientY-r.top-z/2}px`;b.style.position=b.style.position||"relative";b.style.overflow="hidden";b.appendChild(p);setTimeout(()=>p.remove(),600)});
 const pill=s=>`<span class="pill s-${String(s).replace(/[^A-Za-z]/g,"")}">${esc(LBL[s]||s)}</span>`;
 const row=c=>`<div class="item" onclick="detail('${c.id}')"><div class="av">${esc((c.customer_name||c.company_name||"?").charAt(0).toUpperCase())}</div><div class="mid"><b>${esc(c.customer_name||"—")}</b><small>${esc(c.company_name||"")}${c.city?" · "+esc(c.city):""}</small>${c.created_at?`<small class="dt">📅 ${fd(c.created_at)}${upd(c)?` · ✏️ ${fd(c.updated_at)}`:""}</small>`:""}${c.expo_salespeople?`<small class="by">👤 ${esc(c.expo_salespeople.full_name)}</small>`:""}</div><div class="rt">${pill(c.lead_status)}<div style="display:flex;gap:6px">${waNum(c)?`<a class="call wa" href="${waLink(c)}" target="_blank" rel="noopener" onclick="event.stopPropagation()">💬</a>`:""}${c.mobile?`<a class="call" href="tel:${esc(c.mobile)}" onclick="event.stopPropagation()">📞</a>`:""}</div></div></div>`;
 
