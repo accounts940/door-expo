@@ -465,16 +465,22 @@ async function detail(id){M(spin);
   <div class="acts">${c.mobile?`<a class="btn g" href="tel:${esc(c.mobile)}">📞 Call</a>`:""}${wa?`<a class="btn" href="${waLink(c)}" target="_blank" rel="noopener" style="background:#25a244">💬 WhatsApp</a>`:""}</div><button class="btn r w" id="qtb" style="margin-top:10px">🧾 Create Quotation</button></div>
   <div class="card"><h3>🔄 Update progress</h3><div class="steps">${STAGES.map(([v,l],i)=>`<button type="button" class="step ${v===nz(c.lead_status)?"on":i<idx&&idx<5?"done":""}" data-v="${v}">${l}</button>`).join("")}</div>
   ${nx?`<button class="btn r w" id="nxt">Move to ${nx[1]} →</button>`:""}
-  <label>Next follow-up date</label><input type="date" id="nfd" value="${c.next_followup_date||""}"><label>Update note</label><textarea id="nnt" rows="2" placeholder="e.g. Quotation sent on WhatsApp, sample couriered…"></textarea>${mic("#nnt")}<button class="btn g w" id="upb">Update status</button></div></div>
-  <div><div class="card"><h3>📋 Full info</h3><div class="thumbs">${f?`<img src="${f}">`:""}${b?`<img src="${b}">`:""}</div>${form(c,p.map(x=>x.product))}<button class="btn g w" id="sv">Save changes</button></div></div></div>`);
-  const apply=async()=>{const d=$("#nfd").value||null,n=$("#nnt").value.trim(),o={lead_status:sel};if(d)o.next_followup_date=d;if(n||sel!==nz(c.lead_status))o.remarks=(c.remarks?c.remarks+"\n":"")+`[${fd(new Date())} · ${LBL[sel]||sel}]${n?" "+n:""}`;
-    const{error}=await sb.from("expo_customers").update(o).eq("id",id);if(error)return toast(error.message,1);
-    if(d)await sb.from("expo_followups").insert({customer_id:id,due_date:d,note:n||null});toast("Updated ✓ "+(LBL[sel]||sel));detail(id)};
-  document.querySelectorAll(".step").forEach(b=>b.onclick=()=>{sel=b.dataset.v;document.querySelectorAll(".step").forEach(x=>x.classList.toggle("on",x===b))});
-  $("#qtb").onclick=()=>quoteBuilder(c,p.map(x=>x.product));$("#upb").onclick=apply;if(nx)$("#nxt").onclick=()=>{sel=nx[0];apply()};
-  $("#sv").onclick=async()=>{const v=read(),{error}=await sb.from("expo_customers").update(v).eq("id",id);
-    if(!error){await sb.from("expo_customer_products").delete().eq("customer_id",id);const pr=prods();if(pr.length)await sb.from("expo_customer_products").insert(pr.map(x=>({customer_id:id,product:x})))}
-    error?toast(error.message,1):toast("Saved ✓")}}
+  <label>Next follow-up date</label><input type="date" id="nfd" value="${c.next_followup_date||""}"><label>Update note</label><textarea id="nnt" rows="2" placeholder="e.g. Quotation sent on WhatsApp, sample couriered…"></textarea>${mic("#nnt")}<button class="btn g w" id="upb">💾 Save changes</button></div></div>
+  <div><div class="card"><h3>📋 Full info</h3><div class="thumbs">${f?`<img src="${f}">`:""}${b?`<img src="${b}">`:""}</div>${form(c,p.map(x=>x.product))}<button class="btn g w" id="sv">💾 Save changes</button></div></div></div>`);
+  const fs=document.querySelector('[data-k="lead_status"]'),setSel=v=>{sel=v;document.querySelectorAll(".step").forEach(x=>x.classList.toggle("on",x.dataset.v===v));if(fs)fs.value=v};
+  if(fs){fs.value=sel;fs.onchange=()=>setSel(fs.value)}
+  const saveAll=async(quiet)=>{const v=read(),d=$("#nfd").value||null,n=$("#nnt").value.trim();v.lead_status=sel;if(d)v.next_followup_date=d;
+    if(n||sel!==nz(c.lead_status))v.remarks=(v.remarks?v.remarks+"\n":"")+`[${fd(new Date())} · ${LBL[sel]||sel}]${n?" "+n:""}`;
+    const{error}=await sb.from("expo_customers").update(v).eq("id",id);if(error){toast(error.message,1);return false}
+    await sb.from("expo_customer_products").delete().eq("customer_id",id);const pr=prods();if(pr.length)await sb.from("expo_customer_products").insert(pr.map(x=>({customer_id:id,product:x})));
+    if(d)await sb.from("expo_followups").insert({customer_id:id,due_date:d,note:n||null});
+    if(!quiet){toast("Saved ✓");detail(id)}return true};
+  const lock=async(b,fn)=>{b.disabled=true;await fn();b.disabled=false};
+  document.querySelectorAll(".step").forEach(b=>b.onclick=()=>setSel(b.dataset.v));
+  $("#upb").onclick=e=>lock(e.currentTarget,()=>saveAll());$("#sv").onclick=e=>lock(e.currentTarget,()=>saveAll());if(nx)$("#nxt").onclick=e=>lock(e.currentTarget,()=>{setSel(nx[0]);return saveAll()});
+  $("#qtb").onclick=async e=>{const b=e.currentTarget,t=b.textContent;b.disabled=true;b.textContent="Preparing…";const ok=await saveAll(true);
+    if(ok){const{data:c2}=await sb.from("expo_customers").select("*,expo_salespeople(full_name)").eq("id",id).single();quoteBuilder(c2||c,prods())}
+    b.disabled=false;b.textContent=t}}
 
 async function fu(){const{data=[]}=await sb.from("expo_customers").select("id,customer_name,company_name,city,mobile,lead_status,next_followup_date,created_at,updated_at").eq("salesperson_id",me.id).not("next_followup_date","is",null).order("next_followup_date"),t=today();
   const g=(h,a,c)=>a.length?`<div class="sec ${c||""}">${h} · ${a.length}</div>${a.map(x=>row(x)).join("")}`:"";
