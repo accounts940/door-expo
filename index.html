@@ -370,10 +370,17 @@ async function quoteHistory(c){QHC=c;openSheet("📂 Quotations sent",'<div clas
   const{data,error}=await sb.from("expo_quotations").select("*").eq("customer_id",c.id).order("created_at",{ascending:false});const b=document.querySelector(".sheet .sh-b");if(!b)return;
   if(error){b.innerHTML=`<div class="sc">Could not load: ${esc(error.message)}</div>`;return}QH=data||[];
   b.innerHTML=QH.length?QH.map((r,i)=>`<div class="sc" style="--d:${Math.min(i,8)}"><div style="display:flex;justify-content:space-between;gap:10px"><h4>${esc(r.quote_no)}</h4><b style="color:var(--navy)">${money(r.total)}</b></div><div class="l"><i>🗓️</i><span>${ft(r.created_at)}</span></div><div class="l"><i>👤</i><span>${esc(r.prepared_by||"")}</span></div><div class="l"><i>📦</i><span>${(r.items||[]).map(x=>esc(x.n)+" × "+x.q).join(", ")}</span></div><div class="act"><button type="button" class="btn g" data-qv="${i}">👁️ View quotation</button></div></div>`).join(""):'<div class="sc">No quotation sent yet.</div>'}
-document.addEventListener("click",async e=>{const v=e.target.closest("[data-qv]");if(!v)return;const r=QH[+v.dataset.qv],c=QHC;if(!r||!c)return;v.disabled=true;const t=v.textContent;v.textContent="Opening…";
-  try{const q=await makeQuoteImg(c,{items:r.items,days:r.valid_days,ph:r.prepared_phone||"",by:r.prepared_by,no:r.quote_no,date:r.created_at});QC=c;const fn="Quotation_"+(c.company_name||c.customer_name||"Customer").replace(/[^A-Za-z0-9]+/g,"_")+"_"+q.no+".png";
+
+/* ===== Sample request ===== */
+const fmtPh=n=>{n=String(n||"").replace(/\D/g,"");return n.length===12&&n.startsWith("91")?"+91 "+n.slice(2,7)+" "+n.slice(7):n};
+const sampleTo=()=>"918307893824";
+function sampleText(c,pr,note){return `🧪 *SAMPLE REQUEST*\nRequested by: *${me.full_name}*${salesPh()?" ("+salesPh()+")":""}\nDate: ${ft(new Date())}\n\n*Customer:* ${c.customer_name||"-"}${c.designation?" ("+c.designation+")":""}\n*Company:* ${c.company_name||"-"}\n*Mobile:* ${fmtPh(waNum(c)||c.mobile)||"-"}${c.email?"\n*Email:* "+c.email:""}\n*Address:* ${[c.address,c.city,c.state].filter(Boolean).join(", ")||"-"}\n\n*Products:*\n${pr.length?pr.map((p,i)=>(i+1)+". "+p).join("\n"):"-"}${c.requirements?"\n\n*Requirement:* "+c.requirements:""}${note?"\n\n*Note:* "+note:""}`}
+async function quoteLatest(c,btn){const t=btn?btn.textContent:"";if(btn){btn.disabled=true;btn.textContent="Opening…"}
+  try{const{data,error}=await sb.from("expo_quotations").select("*").eq("customer_id",c.id).order("created_at",{ascending:false}).limit(1);if(error)throw error;const r=(data||[])[0];if(!r){toast("No quotation sent yet",1);return}
+    const q=await makeQuoteImg(c,{items:r.items,days:r.valid_days,ph:r.prepared_phone||"",by:r.prepared_by,no:r.quote_no,date:r.created_at});QC=c;const fn="Quotation_"+(c.company_name||c.customer_name||"Customer").replace(/[^A-Za-z0-9]+/g,"_")+"_"+q.no+".png";
     QI={...q,fn,msg:`Hello ${fname(c.customer_name)},\n\nPlease find our quotation ${q.no} for ${money(q.total)} (incl. GST). It is valid for ${r.valid_days} days.\n\nRegards,\n${r.prepared_by||me.full_name}${r.prepared_phone?"\n"+r.prepared_phone:""}\nTeam Selmex Industries Private Limited`,num:waNum(c),url:URL.createObjectURL(q.blob),sent:true,d:null};showQuoteResult()}
-  catch(err){toast("Could not open: "+(err.message||err),1);v.disabled=false;v.textContent=t}});
+  catch(err){toast("Could not open: "+(err.message||err),1)}
+  if(btn){btn.disabled=false;btn.textContent=t}}
 document.addEventListener("click",e=>{const q=e.target.closest("[data-qs]");if(!q)return;const m=q.dataset.qs;
   if(m==="gen")return genQuote();if(m==="ed")return quoteBuilder(QC,null,true);if(!QI)return;
   const num=QI.num?"+"+QI.num:"",cp=()=>{if(!num)return false;try{navigator.clipboard.writeText(num).catch(()=>{});return true}catch(_){return false}};
@@ -483,7 +490,7 @@ async function detail(id){M(spin);
   M(`<button class="btn l" onclick="go(last)" style="margin:0 0 10px">‹ Back</button>
   <div class="dg"><div><div class="card"><div style="display:flex;gap:12px;align-items:center"><div class="av">${esc((c.customer_name||c.company_name||"?").charAt(0).toUpperCase())}</div><div class="mid"><b style="font-size:18px">${esc(c.customer_name||"Customer")}</b><small>${esc(c.company_name||"")}${c.city?" · "+esc(c.city):""}</small>${c.expo_salespeople?`<small class="by">👤 Collected by ${esc(c.expo_salespeople.full_name)}</small>`:""}</div>${pill(c.lead_status)}</div>
   ${c.created_at?`<div class="dts">🗓️ Entered <b>${ft(c.created_at)}</b>${upd(c)?`<br>✏️ Last updated <b>${ft(c.updated_at)}</b>`:""}</div>`:""}
-  <div class="acts">${c.mobile?`<a class="btn g" href="tel:${esc(c.mobile)}">📞 Call</a>`:""}${wa?`<a class="btn" href="${waLink(c)}" target="_blank" rel="noopener" style="background:#25a244">💬 WhatsApp</a>`:""}</div><button class="btn r w" id="qtb" style="margin-top:10px">🧾 Create Quotation</button><button class="btn l w hide" id="qhb" style="margin-top:8px">📂 See sent quotations</button></div>
+  <div class="acts">${c.mobile?`<a class="btn g" href="tel:${esc(c.mobile)}">📞 Call</a>`:""}${wa?`<a class="btn" href="${waLink(c)}" target="_blank" rel="noopener" style="background:#25a244">💬 WhatsApp</a>`:""}</div><button class="btn r w" id="qtb" style="margin-top:10px">🧾 Create Quotation</button><button class="btn l w hide" id="qhb" style="margin-top:8px">📂 See sent quotation</button><button class="btn l w" id="smb" style="margin-top:8px">🧪 Request Sample</button></div>
   <div class="card"><h3>🔄 Update progress</h3><div class="steps">${STAGES.map(([v,l],i)=>`<button type="button" class="step ${v===nz(c.lead_status)?"on":i<idx&&idx<5?"done":""}" data-v="${v}">${l}</button>`).join("")}</div>
   ${nx?`<button class="btn r w" id="nxt">Move to ${nx[1]} →</button>`:""}
   <label>Next follow-up date</label><input type="date" id="nfd" value="${c.next_followup_date||""}"><label>Update note</label><textarea id="nnt" rows="2" placeholder="e.g. Quotation sent on WhatsApp, sample couriered…"></textarea>${mic("#nnt")}<button class="btn g w" id="upb">💾 Save changes</button></div></div>
@@ -499,7 +506,11 @@ async function detail(id){M(spin);
   const lock=async(b,fn)=>{b.disabled=true;await fn();b.disabled=false};
   document.querySelectorAll(".step").forEach(b=>b.onclick=()=>setSel(b.dataset.v));
   $("#upb").onclick=e=>lock(e.currentTarget,()=>saveAll());$("#sv").onclick=e=>lock(e.currentTarget,()=>saveAll());if(nx)$("#nxt").onclick=e=>lock(e.currentTarget,()=>{setSel(nx[0]);return saveAll()});
-  sb.from("expo_quotations").select("id",{count:"exact",head:true}).eq("customer_id",id).then(r=>{if(!r.error&&r.count>0){const b=$("#qhb");if(b){b.classList.remove("hide");b.textContent=`📂 See sent quotations (${r.count})`;b.onclick=()=>quoteHistory(c)}}});
+  sb.from("expo_quotations").select("id",{count:"exact",head:true}).eq("customer_id",id).then(r=>{if(!r.error&&r.count>0){const b=$("#qhb");if(b){b.classList.remove("hide");b.textContent="📂 See sent quotation";b.onclick=e=>quoteLatest(c,e.currentTarget)}}});
+  $("#smb").onclick=async e=>{const b=e.currentTarget,pr=prods(),text=sampleText({...c,...read()},pr,""),wa="https://api.whatsapp.com/send?phone="+sampleTo()+"&text="+encodeURIComponent(text);
+    window.open(wa,"_blank");b.disabled=true;toast("WhatsApp opened. Press Send ✓");
+    if(await saveAll(true)){const{data:c2}=await sb.from("expo_customers").select("remarks").eq("id",id).single();await sb.from("expo_customers").update({remarks:((c2&&c2.remarks)||"")+(c2&&c2.remarks?"\n":"")+`[${fd(new Date())} · Sample requested] ${pr.join(", ")||"see message"}`}).eq("id",id);detail(id)}
+    b.disabled=false};
   $("#qtb").onclick=async e=>{const b=e.currentTarget,t=b.textContent;b.disabled=true;b.textContent="Preparing…";const ok=await saveAll(true);
     if(ok){const{data:c2}=await sb.from("expo_customers").select("*,expo_salespeople(full_name)").eq("id",id).single();quoteBuilder(c2||c,prods())}
     b.disabled=false;b.textContent=t}}
