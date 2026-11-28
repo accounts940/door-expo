@@ -561,7 +561,7 @@ async function fu(){const{data=[]}=await sb.from("expo_customers").select("id,cu
   const g=(h,a,c)=>a.length?`<div class="sec ${c||""}">${h} · ${a.length}</div>${a.map(x=>row(x)).join("")}`:"";
   M(`<h3>📅 My Follow-ups</h3>${g("Overdue",data.filter(x=>x.next_followup_date<t),"red")}${g("Today",data.filter(x=>x.next_followup_date===t))}${g("Upcoming",data.filter(x=>x.next_followup_date>t))}${data.length?"":'<div class="card">No follow-ups scheduled.</div>'}`)}
 
-const PTS={cust:2,lead:1,won:2};
+const PTS={cust:1,lead:1,won:3};
 async function lb(){let{data=[]}=await sb.rpc("expo_leaderboard");
   const ORD=["nitish","hanumant","manjeet","preeti"],pos=n=>{const i=ORD.findIndex(k=>String(n).toLowerCase().includes(k));return i<0?99:i},md=["🥇","🥈","🥉"];
   data=data.filter(r=>pos(r.full_name)<99).map(r=>({...r,total:+r.total||0,interested:+r.interested||0,converted:+r.converted||0})).map(r=>({...r,pts:r.total*PTS.cust+r.interested*PTS.lead+r.converted*PTS.won}));
