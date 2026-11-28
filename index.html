@@ -137,6 +137,23 @@ body.lgn .top{display:none}body.lgn main{max-width:none;padding:0}body.lgn{paddi
 .lg2-card .fl input:focus{border-color:var(--green);box-shadow:0 0 0 4px #1f9d5522;transform:translateY(-1px)}
 .lg2-card h2,.lg2-card>p{animation:rise .6s .1s both}
 .lg2-brand .pills span{transition:transform .2s,background .2s}.lg2-brand .pills span:hover{transform:translateY(-2px)}
+/* ===== list / leaderboard / form polish v4 ===== */
+.lbt{color:#fff!important;font-size:26px;margin:0 0 4px}.lbsub{color:#ffffffb8;font-size:13px;margin:0 0 14px}
+.lbc.clk{cursor:pointer;transition:transform .2s,box-shadow .2s}.lbc.clk:hover{transform:translateY(-3px);box-shadow:0 14px 28px -10px #0008}.lbc.clk:active{transform:scale(.99)}
+.lbh{display:flex;align-items:center;gap:14px;margin-bottom:12px}.lbh h3{color:#fff;margin:0;font-size:22px}.lbh small{color:#ffffffb0}.lbh .btn{width:auto;padding:0 16px;min-height:44px}
+.lrow{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px}.lrow select{margin:0}@media(max-width:520px){.lrow{grid-template-columns:1fr}}
+.gh{grid-column:1/-1;display:flex;align-items:center;gap:10px;margin:14px 2px 8px;color:#fff;font-weight:800;font-size:17px;letter-spacing:.2px}
+.gh span{background:#ffffff26;border-radius:99px;padding:2px 12px;font-size:13px;font-weight:700}
+.item.cr{align-items:flex-start;gap:12px}.item.cr .av{flex:none;width:46px;height:46px}
+.item.cr .co{font-size:16.5px;font-weight:800;color:var(--navy);line-height:1.25}
+.item.cr .pn{margin-top:2px;color:#4b5678;font-size:13px}
+.item.cr .meta{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;margin:6px 0 2px}.item.cr .meta .dt{display:inline;font-size:12px}
+.item.cr .by{margin-top:2px}
+.item.cr .acts{display:flex;flex-direction:column;gap:8px;flex:none;margin:0;grid-template-columns:none}
+.fl.req input{border-color:#d6202966;background:#fffafa}.fl.req label{color:#b3161d;font-weight:800}
+.fl.req input:focus+label,.fl.req input:not(:placeholder-shown)+label{color:#b3161d}
+.fl.bad input{border-color:#d62027!important;box-shadow:0 0 0 4px #d6202722;animation:shk .4s}
+@keyframes shk{20%,60%{transform:translateX(-6px)}40%,80%{transform:translateX(6px)}}
 .lg2-f{text-align:center;color:var(--mu);font-size:12px;margin-top:14px}
 .bsp{width:18px;height:18px;border:3px solid #fff6;border-top-color:#fff;border-radius:50%;animation:s .7s linear infinite}
 .shake{animation:shk .4s}@keyframes shk{20%,60%{transform:translateX(-8px)}40%,80%{transform:translateX(8px)}}
@@ -271,7 +288,7 @@ const fd=d=>d?new Date(d).toLocaleDateString("en-IN",{day:"numeric",month:"short
 const nz=v=>v==="New"?"Interested":v;const DV=(()=>{const C={क:"k",ख:"kh",ग:"g",घ:"gh",ङ:"n",च:"ch",छ:"chh",ज:"j",झ:"jh",ञ:"n",ट:"t",ठ:"th",ड:"d",ढ:"dh",ण:"n",त:"t",थ:"th",द:"d",ध:"dh",न:"n",प:"p",फ:"f",ब:"b",भ:"bh",म:"m",य:"y",र:"r",ल:"l",व:"v",श:"sh",ष:"sh",स:"s",ह:"h",ळ:"l"},V={अ:"a",आ:"aa",इ:"i",ई:"ee",उ:"u",ऊ:"oo",ऋ:"ri",ए:"e",ऐ:"ai",ओ:"o",औ:"au",ऑ:"o"},M={"ा":"a","ि":"i","ी":"ee","ु":"u","ू":"oo","े":"e","ै":"ai","ो":"o","ौ":"au","ृ":"ri","ॉ":"o","ं":"n","ँ":"n","ः":"h"},S="ािीुूेैोौृॉ";
 return t=>t.replace(/[\u0900-\u097F]+/g,w=>{const a=[...w];let o="";for(let i=0;i<a.length;i++){const h=a[i],x=a[i+1];if(h==="़")continue;if(C[h]!==undefined){o+=C[h];if(x==="़")i++;const y=a[i+1];if(y==="्")i++;else if(!(y&&S.includes(y))&&i<a.length-1)o+="a"}else if(V[h])o+=V[h];else if(M[h]!==undefined)o+=M[h];else if(h==="।")o+="."}return o})})();
 const mic=sel=>`<div class="vrow"><button type="button" class="mic" data-t='${sel}'>🎤 Bolo (Hinglish)</button></div>`;
-const FIELDS=[["customer_name","Full name"],["company_name","Company"],["designation","Designation"],["mobile","Mobile"],["alternate_mobile","Alt. mobile / WhatsApp"],["email","Email"],["website","Website"],["address","Address"],["city","City"],["state","State"],["country","Country"],["industry","Industry"],["customer_type","Customer type"]];
+const FIELDS=[["company_name","Company name *"],["customer_name","Customer name"],["designation","Designation"],["mobile","Mobile"],["alternate_mobile","Alt. mobile / WhatsApp"],["email","Email"],["website","Website"],["address","Address"],["city","City"],["state","State"],["country","Country"],["industry","Industry"],["customer_type","Customer type"]];
 const INDUSTRIES=["Doors & Windows","Façade & Glass","Construction & Contractors","Builders & Real Estate","Interiors & Furniture","Packaging & Logistics","Manufacturing & Industrial","Dealer / Trader","Other"];
 const normInd=s=>{if(!s)return"";const t=String(s).toLowerCase(),m=[[/door|window|fenestr|upvc|alumin/,0],[/fa[cç]ade|glass|glaz|cladding|curtain/,1],[/construct|contract|civil|infra|engineer/,2],[/build|real ?estate|develop|propert/,3],[/interior|furniture|carpent|wood|modular|kitchen/,4],[/packag|logistic|courier|warehouse|carton|box/,5],[/manufactur|industr|factory|fabricat|machine|plastic|chemical/,6],[/dealer|trader|distribut|supplier|wholesal|retail|trading/,7]];for(const[r,i]of m)if(r.test(t))return INDUSTRIES[i];return"Other"};
 const waNum=c=>{for(const v of[c.mobile,c.alternate_mobile])for(const p of String(v||"").split(/[,;\/]|\bor\b/i)){let d=p.replace(/\D/g,"");if(d.length===12&&d.startsWith("91"))d=d.slice(2);else if(d.length===11&&d.startsWith("0"))d=d.slice(1);else if(d.length===13&&d.startsWith("091"))d=d.slice(3);if(/^[6-9]\d{9}$/.test(d))return"91"+d}const d=String(c.mobile||"").replace(/\D/g,"");return d.length>=8&&d.length<=15?d:""};
@@ -410,14 +427,14 @@ document.addEventListener("click",e=>{const q=e.target.closest("[data-qs]");if(!
   try{navigator.clipboard.write([new ClipboardItem({"image/png":QI.blob})]).then(()=>{toast("Image copied ✓ In WhatsApp press Ctrl+V, then Enter");go()}).catch(()=>{dlBlob(QI.blob,QI.fn);toast("Image saved. In WhatsApp click 📎 to attach it");go()})}catch(_){dlBlob(QI.blob,QI.fn);go()}});
 document.addEventListener("click",e=>{const b=e.target.closest(".btn,.step,.mic");if(!b)return;navigator.vibrate&&navigator.vibrate(6);const r=b.getBoundingClientRect(),z=Math.max(r.width,r.height),p=document.createElement("span");p.className="rip";p.style.cssText=`width:${z}px;height:${z}px;left:${e.clientX-r.left-z/2}px;top:${e.clientY-r.top-z/2}px`;b.style.position=b.style.position||"relative";b.style.overflow="hidden";b.appendChild(p);setTimeout(()=>p.remove(),600)});
 const pill=s=>`<span class="pill s-${String(s).replace(/[^A-Za-z]/g,"")}">${esc(LBL[s]||s)}</span>`;
-const row=c=>`<div class="item" onclick="detail('${c.id}')"><div class="av">${esc((c.customer_name||c.company_name||"?").charAt(0).toUpperCase())}</div><div class="mid"><b>${esc(c.customer_name||"—")}</b><small>${esc(c.company_name||"")}${c.city?" · "+esc(c.city):""}</small>${c.created_at?`<small class="dt">📅 ${fd(c.created_at)}${upd(c)?` · ✏️ ${fd(c.updated_at)}`:""}</small>`:""}${c.expo_salespeople?`<small class="by">👤 ${esc(c.expo_salespeople.full_name)}</small>`:""}</div><div class="rt">${pill(c.lead_status)}<div style="display:flex;gap:6px">${waNum(c)?`<a class="call wa" href="${waLink(c)}" target="_blank" rel="noopener" onclick="event.stopPropagation()">💬</a>`:""}${c.mobile?`<a class="call" href="tel:${esc(c.mobile)}" onclick="event.stopPropagation()">📞</a>`:""}</div></div></div>`;
+const row=c=>{const co=c.company_name||c.customer_name||"—",pn=c.company_name?(c.customer_name||""):"";return `<div class="item cr" onclick="detail('${c.id}')"><div class="av">${esc(co.charAt(0).toUpperCase())}</div><div class="mid"><b class="co">${esc(co)}</b>${pn||c.city?`<small class="pn">👤 ${esc(pn)}${pn&&c.city?" · ":""}${c.city?"📍 "+esc(c.city):""}</small>`:""}<div class="meta">${pill(c.lead_status)}${c.created_at?`<small class="dt">📅 ${fd(c.created_at)}${upd(c)?` · ✏️ ${fd(c.updated_at)}`:""}</small>`:""}</div>${c.expo_salespeople&&!L.uid?`<small class="by">🧑‍💼 ${esc(c.expo_salespeople.full_name)}</small>`:""}</div><div class="acts">${waNum(c)?`<a class="call wa" href="${waLink(c)}" target="_blank" rel="noopener" onclick="event.stopPropagation()">💬</a>`:""}${c.mobile?`<a class="call" href="tel:${esc(c.mobile)}" onclick="event.stopPropagation()">📞</a>`:""}</div></div>`};
 
 async function init(){
   const{data:{session}}=await sb.auth.getSession();if(!session)return login();
   const{data}=await sb.from("expo_salespeople").select("*").eq("id",session.user.id).maybeSingle();
   if(!data||!data.active){setUI(false);M(`<div class="card lg"><h3>Not registered</h3><p>Your account is not part of the Expo CRM. Please ask the admin to add you.</p><button class="btn w" onclick="out()">Sign out</button></div>`);return}
   me=data;await loadMyPhone(session);setUI(true);
-  const T=isAdm()?[["adm","📊","Dashboard"],["all","🗂️","All"],["up","📷","Scan"],["lb","⭐","Stars"]]:[["dash","🏠","Home"],["cus","👥","Customers"],["up","📷","Scan"],["fu","📅","Follow-ups"],["lb","⭐","Stars"]];
+  const T=isAdm()?[["adm","📊","Dashboard"],["all","🗂️","All"],["up","📷","Scan"],["lb","🏆","Leaders"]]:[["dash","🏠","Home"],["cus","👥","Customers"],["up","📷","Scan"],["fu","📅","Follow-ups"],["lb","🏆","Leaders"]];
   $("#nav").innerHTML=T.map(t=>`<button data-p="${t[0]}" class="${t[0]==="up"?"fab":""}"><i>${t[1]}</i>${t[2]}</button>`).join("");
   $("#nav").onclick=e=>{const b=e.target.closest("button");if(b)go(b.dataset.p)};go(isAdm()?"adm":"dash")}
 function setUI(on){document.body.classList.remove("lgn");$("#who").classList.toggle("hide",!on);$("#lo").classList.toggle("hide",!on);$("#nav").classList.toggle("hide",!on);
@@ -464,12 +481,12 @@ async function extract(){const st=$("#st"),bt=$("#ex");st.style.color="var(--nav
     if(!r.ok){let m="";try{const j=await r.json();m=j.error||j.message||j.msg||""}catch(_){}throw new Error("Extraction failed ("+r.status+")"+(m?": "+m+(/Not allowed|Member/.test(m)?"":""):""))}ext=await r.json();verify()}
   catch(e){st.style.color="var(--red)";st.innerHTML=`${esc(e.message)}. Retake the photo or <a href="#" onclick="ext={};verify();return false">enter details manually</a>.`;bt.disabled=false}}
 
-function form(c,pr){return `<div class="f2">${FIELDS.map(([k,l])=>k==="industry"?`<div><label>${l}</label><select data-k="industry"><option value="">Select…</option>${INDUSTRIES.map(i=>`<option ${i===normInd(c.industry)?"selected":""}>${i}</option>`).join("")}</select></div>`:`<div class="fl"><input data-k="${k}" value="${esc(c[k])}" placeholder=" "><label>${l}</label></div>`).join("")}</div>
+function form(c,pr){return `<div class="f2">${FIELDS.map(([k,l])=>k==="industry"?`<div><label>${l}</label><select data-k="industry"><option value="">Select…</option>${INDUSTRIES.map(i=>`<option ${i===normInd(c.industry)?"selected":""}>${i}</option>`).join("")}</select></div>`:`<div class="fl${k==="company_name"?" req":""}"><input data-k="${k}" value="${esc(c[k])}" placeholder=" "><label>${l}</label></div>`).join("")}</div>
 <label>Interested products</label><div class="chips" id="pr">${PRODUCTS.map(p=>`<label><input type="checkbox" value="${p}" ${pr.includes(p)?"checked":""}><span>${PICO[p]||""} ${p}</span></label>`).join("")}</div>
 <label>Customer requirements</label><textarea data-k="requirements" rows="2">${esc(c.requirements)}</textarea>${mic('[data-k="requirements"]')}
 <div class="f2"><div class="fl"><input data-k="business_potential" value="${esc(c.business_potential)}" placeholder=" "><label>Estimated business potential</label></div><div><label>Lead status</label><select data-k="lead_status">${STAGES.map(([v,l])=>`<option value="${v}" ${v===nz(c.lead_status||"Interested")?"selected":""}>${l}</option>`).join("")}</select></div><div><label>Next follow-up date</label><input type="date" data-k="next_followup_date" value="${c.next_followup_date||""}"></div></div>
 <label>Remarks</label><textarea data-k="remarks" rows="3">${esc(c.remarks)}</textarea>${mic('[data-k="remarks"]')}`}
-const read=()=>{const o={};document.querySelectorAll("[data-k]").forEach(e=>o[e.dataset.k]=e.value.trim()||null);return o},prods=()=>[...document.querySelectorAll("#pr input:checked")].map(x=>x.value);
+const needCo=v=>{if(v.company_name&&String(v.company_name).trim())return true;toast("Company name is required",1);const i=document.querySelector('[data-k="company_name"]');if(i){i.focus();i.scrollIntoView({block:"center",behavior:"smooth"});const f=i.closest(".fl");f&&f.classList.add("bad");setTimeout(()=>f&&f.classList.remove("bad"),1800)}return false};const read=()=>{const o={};document.querySelectorAll("[data-k]").forEach(e=>o[e.dataset.k]=e.value.trim()||null);return o},prods=()=>[...document.querySelectorAll("#pr input:checked")].map(x=>x.value);
 
 const rotUrl=(u,d)=>new Promise(r=>{d=((+d||0)%360+360)%360;if(!d)return r(u);const i=new Image();i.onload=()=>{const c=document.createElement("canvas"),q=d%180;c.width=q?i.height:i.width;c.height=q?i.width:i.height;const x=c.getContext("2d");x.translate(c.width/2,c.height/2);x.rotate(d*Math.PI/180);x.drawImage(i,-i.width/2,-i.height/2);r(c.toDataURL("image/jpeg",.8))};i.onerror=()=>r(u);i.src=u});
 async function verify(){ext.industry=normInd(ext.industry)||null;
@@ -478,7 +495,7 @@ async function verify(){ext.industry=normInd(ext.industry)||null;
   M(`<div class="card"><h3>Check &amp; Confirm</h3><div class="thumbs">${th.map((u,i)=>`<div class="th" data-i="${i}"><img src="${u}" alt="card"><div class="tb"><button type="button" data-rot="-90" title="Rotate left">↺</button><button type="button" data-rot="90" title="Rotate right">↻</button></div></div>`).join("")}</div><div id="dp"></div>${form(ext,pp)}<button class="btn g w" id="sv">✅ Confirm &amp; Save</button><button class="btn l w" onclick="go('up')">Cancel</button></div>`);
   const{data:n}=await sb.rpc("expo_check_duplicate",{p_mobile:ext.mobile||"",p_email:ext.email||"",p_company:ext.company_name||""});
   if(n>0)$("#dp").innerHTML=`<div class="warn">⚠️ Possible duplicate: this mobile, email or company already exists in the Expo database. Management will review it. You can still save.</div>`;
-  $("#sv").onclick=async()=>{const v=read(),bt=$("#sv");bt.disabled=true;const P={};
+  $("#sv").onclick=async()=>{const v=read(),bt=$("#sv");if(!needCo(v))return;bt.disabled=true;const P={};
     const{data,error}=await sb.from("expo_customers").insert({...v,card_image_path:null,card_back_path:null}).select("id").single();
     if(error){toast(error.message,1);bt.disabled=false;return}
     const p=prods();if(p.length)await sb.from("expo_customer_products").insert(p.map(x=>({customer_id:data.id,product:x})));
@@ -487,13 +504,20 @@ async function verify(){ext.industry=normInd(ext.industry)||null;
 
 function cus(){L={uid:me.id,page:0};listUI()}
 function all(){L={uid:null,page:0};listUI(true)}
-function listUI(adm){M(`<input id="q" placeholder="🔍 Search name, company, mobile…">${mic("#q")}<select id="fs" style="margin-top:8px"><option value="">All statuses</option>${STAGES.map(([v,l])=>`<option value="${v}">${l}</option>`).join("")}</select>${adm?'<button class="btn l w" id="csv">⬇ Export CSV</button>':""}<div id="ls" class="lgrid" style="margin-top:12px"></div>`);
-  let t;$("#q").oninput=()=>{clearTimeout(t);t=setTimeout(()=>{L.page=0;load(true)},300)};$("#fs").onchange=()=>{L.page=0;load(true)};if(adm)$("#csv").onclick=csv;load(true)}
-async function load(reset){const el=$("#ls");if(reset)el.innerHTML=spin;
-  let q=sb.from("expo_customers").select("id,customer_name,company_name,mobile,lead_status,city,created_at,updated_at,expo_salespeople(full_name)",{count:"exact"}).order("created_at",{ascending:false}).range(L.page*20,L.page*20+19);
+const STG_ORDER=["Interested","Quotation Sent","Negotiation","Converted","Follow-up Required","Not Interested"],STG_ICO={"Interested":"🆕","Quotation Sent":"🧾","Negotiation":"🧪","Converted":"🏆","Follow-up Required":"📅","Not Interested":"🚫"};
+function listUI(adm){const T=L.title;M(`${T?`<div class="lbh"><button class="btn l" id="bk">← Leaderboard</button><div><h3>${esc(T)}</h3><small>Customers by stage</small></div></div>`:""}<input id="q" placeholder="🔍 Search company, name, mobile…">${mic("#q")}<div class="lrow"><select id="fs"><option value="">All statuses</option>${STAGES.map(([v,l])=>`<option value="${v}">${l}</option>`).join("")}</select><select id="gv"><option value="">Latest first</option><option value="p" ${T?"selected":""}>Group by stage</option>${T?"":'<option value="s">Group by salesperson</option>'}</select></div>${adm?'<button class="btn l w" id="csv">⬇ Export CSV</button>':""}<div id="ls" class="lgrid" style="margin-top:12px"></div>`);
+  let t;$("#q").oninput=()=>{clearTimeout(t);t=setTimeout(()=>{L.page=0;load(true)},300)};$("#fs").onchange=()=>{L.page=0;load(true)};$("#gv").onchange=()=>{L.page=0;load(true)};if(adm)$("#csv").onclick=csv;const bk=$("#bk");if(bk)bk.onclick=()=>go("lb");load(true)}
+async function load(reset){const el=$("#ls"),gv=$("#gv").value;if(reset)el.innerHTML=spin;
+  let q=sb.from("expo_customers").select("id,customer_name,company_name,mobile,lead_status,city,created_at,updated_at,expo_salespeople(full_name)",{count:"exact"}).order("created_at",{ascending:false});
+  q=gv?q.limit(1000):q.range(L.page*20,L.page*20+19);
   if(L.uid)q=q.eq("salesperson_id",L.uid);const s=($("#q").value||"").replace(/[,()%]/g,""),f=$("#fs").value;
   if(s)q=q.or(`customer_name.ilike.%${s}%,company_name.ilike.%${s}%,mobile.ilike.%${s}%`);if(f)q=f==="Interested"?q.in("lead_status",["New","Interested"]):q.eq("lead_status",f);
   const{data=[],count}=await q;if(reset)el.innerHTML="";el.querySelector("#mr")?.remove();
+  if(gv){const nm=c=>(c.company_name||c.customer_name||"").toLowerCase(),srt=(x,y)=>nm(x).localeCompare(nm(y)),G=new Map();
+    data.forEach(c=>{const k=gv==="s"?(c.expo_salespeople?.full_name||"Unassigned"):nz(c.lead_status||"Interested");(G.get(k)||G.set(k,[]).get(k)).push(c)});
+    let keys=[...G.keys()];keys=gv==="s"?keys.sort((x,y)=>x.localeCompare(y)):keys.sort((x,y)=>(STG_ORDER.indexOf(x)<0?99:STG_ORDER.indexOf(x))-(STG_ORDER.indexOf(y)<0?99:STG_ORDER.indexOf(y)));
+    el.innerHTML=keys.map(k=>{const A=G.get(k);if(gv==="s")A.sort((x,y)=>(STG_ORDER.indexOf(nz(x.lead_status))+1||99)-(STG_ORDER.indexOf(nz(y.lead_status))+1||99)||srt(x,y));else A.sort(srt);
+      return `<div class="gh">${gv==="s"?"🧑‍💼":(STG_ICO[k]||"•")} ${esc(gv==="s"?k:(LBL[k]||k))}<span>${A.length}</span></div>`+A.map(row).join("")}).join("")||'<div class="card">No customers found.</div>';anim();return}
   el.insertAdjacentHTML("beforeend",data.map(row).join("")||(reset?'<div class="card">No customers found.</div>':""));
   if((L.page+1)*20<count)el.insertAdjacentHTML("beforeend",`<button class="btn l w" id="mr">Load more (${count-(L.page+1)*20})</button>`),$("#mr").onclick=()=>{L.page++;load(false)}}
 async function csv(){const{data=[]}=await sb.from("expo_customers").select("*,expo_salespeople(full_name)").order("created_at").limit(5000);if(!data.length)return toast("Nothing to export",1);
@@ -506,7 +530,7 @@ async function detail(id){M(spin);
   const{data:p=[]}=await sb.from("expo_customer_products").select("product").eq("customer_id",id);
   const[f,b]=await Promise.all([signed(c.card_image_path),signed(c.card_back_path)]),wa=waNum(c),idx=STAGES.findIndex(x=>x[0]===nz(c.lead_status)),nx=idx>=0&&idx<4?STAGES[idx+1]:null;let sel=nz(c.lead_status||"Interested");
   M(`<button class="btn l" onclick="go(last)" style="margin:0 0 10px">‹ Back</button>
-  <div class="dg"><div><div class="card"><div style="display:flex;gap:12px;align-items:center"><div class="av">${esc((c.customer_name||c.company_name||"?").charAt(0).toUpperCase())}</div><div class="mid"><b style="font-size:18px">${esc(c.customer_name||"Customer")}</b><small>${esc(c.company_name||"")}${c.city?" · "+esc(c.city):""}</small>${c.expo_salespeople?`<small class="by">👤 Collected by ${esc(c.expo_salespeople.full_name)}</small>`:""}</div>${pill(c.lead_status)}</div>
+  <div class="dg"><div><div class="card"><div style="display:flex;gap:12px;align-items:center"><div class="av">${esc((c.company_name||c.customer_name||"?").charAt(0).toUpperCase())}</div><div class="mid"><b style="font-size:19px">${esc(c.company_name||c.customer_name||"Customer")}</b><small>${c.company_name?"👤 "+esc(c.customer_name||"")+(c.city?" · ":""):""}${c.city?"📍 "+esc(c.city):""}</small>${c.expo_salespeople?`<small class="by">👤 Collected by ${esc(c.expo_salespeople.full_name)}</small>`:""}</div>${pill(c.lead_status)}</div>
   ${c.created_at?`<div class="dts">🗓️ Entered <b>${ft(c.created_at)}</b>${upd(c)?`<br>✏️ Last updated <b>${ft(c.updated_at)}</b>`:""}</div>`:""}
   <div class="acts">${c.mobile?`<a class="btn g" href="tel:${esc(c.mobile)}">📞 Call</a>`:""}${wa?`<a class="btn" href="${waLink(c)}" target="_blank" rel="noopener" style="background:#25a244">💬 WhatsApp</a>`:""}</div><button class="btn r w" id="qtb" style="margin-top:10px">🧾 Create Quotation</button><button class="btn l w hide" id="qhb" style="margin-top:8px">📂 See sent quotation</button><button class="btn l w" id="smb" style="margin-top:8px">🧪 Request Sample</button></div>
   <div class="card"><h3>🔄 Update progress</h3><div class="steps">${STAGES.map(([v,l],i)=>`<button type="button" class="step ${v===nz(c.lead_status)?"on":i<idx&&idx<5?"done":""}" data-v="${v}">${l}</button>`).join("")}</div>
@@ -515,7 +539,7 @@ async function detail(id){M(spin);
   <div><div class="card"><h3>📋 Full info</h3><div class="thumbs">${f?`<img src="${f}">`:""}${b?`<img src="${b}">`:""}</div>${form(c,p.map(x=>x.product))}<button class="btn g w" id="sv">💾 Save changes</button></div></div></div>`);
   const fs=document.querySelector('[data-k="lead_status"]'),setSel=v=>{sel=v;document.querySelectorAll(".step").forEach(x=>x.classList.toggle("on",x.dataset.v===v));if(fs)fs.value=v};
   if(fs){fs.value=sel;fs.onchange=()=>setSel(fs.value)}
-  const saveAll=async(quiet)=>{const v=read(),d=$("#nfd").value||null,n=$("#nnt").value.trim();v.lead_status=sel;if(d)v.next_followup_date=d;
+  const saveAll=async(quiet)=>{const v=read(),d=$("#nfd").value||null,n=$("#nnt").value.trim();if(!needCo(v))return false;v.lead_status=sel;if(d)v.next_followup_date=d;
     if(n||sel!==nz(c.lead_status))v.remarks=(v.remarks?v.remarks+"\n":"")+`[${fd(new Date())} · ${LBL[sel]||sel}]${n?" "+n:""}`;
     const{error}=await sb.from("expo_customers").update(v).eq("id",id);if(error){toast(error.message,1);return false}
     await sb.from("expo_customer_products").delete().eq("customer_id",id);const pr=prods();if(pr.length)await sb.from("expo_customer_products").insert(pr.map(x=>({customer_id:id,product:x})));
@@ -537,11 +561,15 @@ async function fu(){const{data=[]}=await sb.from("expo_customers").select("id,cu
   const g=(h,a,c)=>a.length?`<div class="sec ${c||""}">${h} · ${a.length}</div>${a.map(x=>row(x)).join("")}`:"";
   M(`<h3>📅 My Follow-ups</h3>${g("Overdue",data.filter(x=>x.next_followup_date<t),"red")}${g("Today",data.filter(x=>x.next_followup_date===t))}${g("Upcoming",data.filter(x=>x.next_followup_date>t))}${data.length?"":'<div class="card">No follow-ups scheduled.</div>'}`)}
 
+const PTS={cust:2,lead:1,won:2};
 async function lb(){let{data=[]}=await sb.rpc("expo_leaderboard");
-  const ORD=["nitish","hanumant","manjeet","preeti"],pos=n=>{const i=ORD.findIndex(k=>String(n).toLowerCase().includes(k));return i<0?99:i},mx=Math.max(1,...data.map(r=>+r.total)),md=["🥇","🥈","🥉"];
-  data=data.filter(r=>pos(r.full_name)<99).sort((x,y)=>pos(x.full_name)-pos(y.full_name));
-  M(`<div class="lbs"><h3>⭐ Star Performers</h3><p style="color:var(--mu);font-size:13px;margin:-4px 0 12px">SELMEX Expo team · only totals are shown, customer details stay private.</p>${data.map((r,i)=>`<div class="lbc t${Math.min(i,3)} ${r.full_name===me.full_name?"me":""}"><div class="pos">${md[i]||i+1}</div><div class="av">${esc(r.full_name.charAt(0).toUpperCase())}</div><div class="mid"><b>${esc(r.full_name)}${r.full_name===me.full_name?" (you)":""}</b><small>${r.total} customers collected</small><div class="meter"><i style="width:${Math.max(4,r.total/mx*100)}%"></i></div></div><div class="st3"><div><b>${r.total}</b>Customers</div><div><b>${r.interested}</b>Active leads</div><div><b>${r.converted}</b>Orders won</div></div></div>`).join("")||'<div class="card">No data yet.</div>'}</div>`)}
-
+  const ORD=["nitish","hanumant","manjeet","preeti"],pos=n=>{const i=ORD.findIndex(k=>String(n).toLowerCase().includes(k));return i<0?99:i},md=["🥇","🥈","🥉"];
+  data=data.filter(r=>pos(r.full_name)<99).map(r=>({...r,total:+r.total||0,interested:+r.interested||0,converted:+r.converted||0})).map(r=>({...r,pts:r.total*PTS.cust+r.interested*PTS.lead+r.converted*PTS.won}));
+  data.sort((x,y)=>y.pts-x.pts||y.converted-x.converted||y.total-x.total||pos(x.full_name)-pos(y.full_name));
+  const mx=Math.max(1,...data.map(r=>r.pts));let ids={};
+  if(isAdm()){const{data:sp=[]}=await sb.from("expo_salespeople").select("id,full_name");sp.forEach(x=>ids[x.full_name]=x.id)}
+  window.__lbOpen=n=>{const id=ids[n];if(!id)return;L={uid:id,page:0,title:n};listUI(true)};
+  M(`<div class="lbs"><h3 class="lbt">🏆 Sales Leaderboard</h3><p class="lbsub">Ranked by points · ${PTS.cust} per customer · ${PTS.lead} per active lead · ${PTS.won} per order won${isAdm()?" · tap a name to see their customers":""}</p>${data.map((r,i)=>`<div class="lbc t${Math.min(i,3)} ${r.full_name===me.full_name?"me":""} ${isAdm()&&ids[r.full_name]?"clk":""}" ${isAdm()&&ids[r.full_name]?`onclick="__lbOpen(decodeURIComponent('${encodeURIComponent(r.full_name)}'))"`:""}><div class="pos">${md[i]||i+1}</div><div class="av">${esc(r.full_name.charAt(0).toUpperCase())}</div><div class="mid"><b>${esc(r.full_name)}${r.full_name===me.full_name?" (you)":""}</b><small>${r.pts} points</small><div class="meter"><i style="width:${Math.max(4,r.pts/mx*100)}%"></i></div></div><div class="st3"><div><b>${r.total}</b>Customers</div><div><b>${r.interested}</b>Active leads</div><div><b>${r.converted}</b>Orders won</div></div></div>`).join("")||'<div class="card">No data yet.</div>'}</div>`)}
 async function adm(){DRL.length=0;const[{data:c0=[]},{data:pr0=[]},{data:l0=[]},{data:sp=[]}]=await Promise.all([sb.from("expo_customers").select("id,salesperson_id,lead_status,city,industry,next_followup_date,customer_name,company_name,designation,mobile,alternate_mobile,email,address,requirements,remarks,created_at,updated_at,expo_salespeople(full_name)"),sb.from("expo_customer_products").select("customer_id,product"),sb.rpc("expo_leaderboard"),sb.from("expo_salespeople").select("id").eq("show_on_leaderboard",true)]);
   const ok=new Set(sp.map(x=>x.id)),c=c0.filter(x=>ok.has(x.salesperson_id)),cid=new Set(c.map(x=>x.id)),pr=pr0.filter(x=>cid.has(x.customer_id)),LBO=["nitish","hanumant","manjeet","preeti"],l=l0.filter(r=>LBO.some(k=>String(r.full_name).toLowerCase().includes(k)));
   const cnt=(a,f)=>Object.entries(a.reduce((o,x)=>{const k=f(x)||"Not specified";o[k]=(o[k]||0)+1;return o},{})).sort((a,b)=>b[1]-a[1]),
