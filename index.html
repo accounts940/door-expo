@@ -161,6 +161,14 @@ body.lgn .top{display:none}body.lgn main{max-width:none;padding:0}body.lgn{paddi
 .dnav.dc{position:fixed;left:50%;top:128px;transform:translateX(-50%);z-index:29;background:#14226bcc;color:#fff;font-size:12px;font-weight:700;padding:4px 12px;border-radius:99px;backdrop-filter:blur(8px)}
 @keyframes dnin{from{opacity:0;margin:0 -14px}to{opacity:1}}
 @media(max-width:700px){.dnav.dl,.dnav.dr{width:40px;height:40px;font-size:26px;opacity:.85;top:45%}.dnav.dl{left:4px}.dnav.dr{right:4px}.dnav.dc{top:auto;bottom:112px}}
+/* ===== speed / smoothness v5 ===== */
+.item.cr{content-visibility:auto;contain-intrinsic-size:auto 150px}
+.lgrid{contain:layout style}
+main,#m{-webkit-overflow-scrolling:touch}
+.card,.item,.lbc,.stat{transform:translateZ(0)}
+.item.cr,.lbc{transition:transform .18s ease,box-shadow .18s ease}
+@media(hover:hover){.item.cr:hover{transform:translateY(-2px);box-shadow:0 12px 26px -12px #14226b55}}
+@media(prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
 .lg2-f{text-align:center;color:var(--mu);font-size:12px;margin-top:14px}
 .bsp{width:18px;height:18px;border:3px solid #fff6;border-top-color:#fff;border-radius:50%;animation:s .7s linear infinite}
 .shake{animation:shk .4s}@keyframes shk{20%,60%{transform:translateX(-8px)}40%,80%{transform:translateX(8px)}}
@@ -312,7 +320,7 @@ const HERO=`<div class="hero"><h2>Zak Doors &amp; Windows Expo</h2><p>SELMEX IND
 const cnts=c=>STAGES.slice(0,5).map(([v])=>c.filter(x=>nz(x.lead_status)===v).length);
 const pipe=a=>{const T=a.reduce((x,y)=>x+y,0),t=T||1;return `<div class="card"><h3 style="font-size:16px">Pipeline · ${T} customers</h3><div class="pipe">${a.map((n,i)=>`<i style="--w:${n/t*100}%;background:${COL[i]}"></i>`).join("")}</div><div class="lgd">${a.map((n,i)=>`<span style="--c:${COL[i]}"><s></s>${STAGES[i][1]} <b>${n}</b></span>`).join("")}</div></div>`};
 const greet=()=>{const h=new Date().getHours(),g=h<12?"Good morning":h<17?"Good afternoon":"Good evening",d=Math.ceil((new Date("2026-12-10T00:00")-new Date())/864e5);return `<div class="hero2"><div class="blob b1"></div><div class="blob b2"></div><small>${d>0?"⏳ "+d+" days to expo":d>-3?"🔥 Expo is live":"✅ Expo wrapped up"}</small>${isSA?"":`<button type="button" class="inst-h" onclick="installApp()">📲 Install app</button>`}<h2>${g},<br><span>${esc((me.full_name||"").split(" ")[0])}</span> 👋</h2><p>Zak Doors &amp; Windows Expo · Hall 2, Stall DD7 · Yashobhoomi, Delhi</p></div>`};
-function anim(){document.querySelectorAll("#m .item").forEach((e,i)=>{if(i<12){e.style.setProperty("--d",i);e.classList.add("in")}});requestAnimationFrame(()=>{const n=$("#nav"),a=n&&n.querySelector(".on:not(.fab)");if(a){n.style.setProperty("--x",a.offsetLeft+"px");n.style.setProperty("--w",a.offsetWidth+"px")}});document.querySelectorAll("#m .stat,#m .item,#m .lbc,#m .card").forEach((e,i)=>e.style.setProperty("--d",Math.min(i,14)));
+function anim(){document.querySelectorAll("#m .item").forEach((e,i)=>{if(i<12){e.style.setProperty("--d",i);e.classList.add("in")}});requestAnimationFrame(()=>{const n=$("#nav"),a=n&&n.querySelector(".on:not(.fab)");if(a){n.style.setProperty("--x",a.offsetLeft+"px");n.style.setProperty("--w",a.offsetWidth+"px")}});[...document.querySelectorAll("#m .stat,#m .item,#m .lbc,#m .card")].slice(0,24).forEach((e,i)=>e.style.setProperty("--d",Math.min(i,14)));
   document.querySelectorAll("#m [data-n]").forEach(e=>{const n=+e.dataset.n,t0=performance.now(),f=t=>{const p=Math.min(1,(t-t0)/900);e.textContent=Math.round(n*(1-Math.pow(1-p,3)));if(p<1)requestAnimationFrame(f)};requestAnimationFrame(f)})}
 
 let RL=[],RD=[];
@@ -406,7 +414,7 @@ async function genQuote(){const c=QC,d=readQ();if(!d)return;const b=document.que
 function showQuoteResult(){const c=QC,mob=canShareFiles(),nm=esc(c.customer_name||"the customer");openSheet("✅ Quotation ready",`<div class="sh-b"><div class="qimg"><img src="${QI.url}" alt="Quotation"></div><div class="sc">${mob?`<div class="l"><i>1️⃣</i><span>Tap <b>Send on WhatsApp</b>.${QI.num?" The number <b>+"+QI.num+"</b> is copied for you.":""}</span></div><div class="l"><i>2️⃣</i><span>Choose <b>WhatsApp</b>, tap 🔍 search, <b>paste the number</b>, pick <b>${nm}</b> and press <b>Send</b>. The image and the message go together.</span></div>`:`<div class="l"><i>1️⃣</i><span>Click <b>Send on WhatsApp</b>. WhatsApp opens in the chat${QI.num?" of <b>+"+QI.num+"</b>":""} with the message typed. The image is copied.</span></div><div class="l"><i>2️⃣</i><span>Press <b>Ctrl+V</b>, then press <b>Enter</b>.</span></div>`}</div></div><div class="qbar"><button type="button" class="btn g" data-qs="wa">📤 Send on WhatsApp</button><button type="button" class="btn l" data-qs="dl">⬇️ Save image</button><button type="button" class="btn l" data-qs="ed">✏️ Edit</button></div>`,esc(c.company_name||c.customer_name||""))}
 async function markSent(){if(!QI||QI.sent)return;QI.sent=true;const c=QC,st=nz(c.lead_status),o={remarks:(c.remarks?c.remarks+"\n":"")+`[${fd(new Date())} · Quotation Given] ${QI.no} · ${money(QI.total)}`};if(st==="Interested"||!st)o.lead_status="Quotation Sent";if(!c.next_followup_date){const f=new Date(Date.now()+3*864e5);o.next_followup_date=f.toISOString().slice(0,10)}
   if(QI.d){const it=QI.d.items.map(x=>({n:x.n,q:+x.q,u:x.u,r:+x.r,g:+x.g||0})),sub=it.reduce((a,x)=>a+x.q*x.r,0),h=await sb.from("expo_quotations").insert({customer_id:c.id,quote_no:QI.no,items:it,subtotal:sub,gst:QI.total-sub,total:QI.total,valid_days:QI.d.days,prepared_by:me.full_name,prepared_phone:QI.d.ph||null});if(h.error)toast("Quotation history not saved: "+h.error.message,1)}
-  const{error}=await sb.from("expo_customers").update(o).eq("id",c.id);if(error){QI.sent=false;toast(error.message,1)}else{Object.assign(c,o);detail(c.id)}}
+  const{error}=await sb.from("expo_customers").update(o).eq("id",c.id);if(error){QI.sent=false;toast(error.message,1)}else{Object.assign(c,o);DC.delete(c.id);detail(c.id)}}
 let QH=[],QHC=null;
 async function quoteHistory(c){QHC=c;openSheet("📂 Quotations sent",'<div class="sh-b"><div class="sk"></div><div class="sk s"></div></div>',esc(c.company_name||c.customer_name||""));
   const{data,error}=await sb.from("expo_quotations").select("*").eq("customer_id",c.id).order("created_at",{ascending:false});const b=document.querySelector(".sheet .sh-b");if(!b)return;
@@ -459,7 +467,7 @@ function login(){setUI(false);document.body.classList.add("lgn");
     if(error){$("#le").textContent=error.message;b.disabled=false;b.innerHTML="<span>Login</span>";const c=$(".lg2-card");c.classList.remove("shake");void c.offsetWidth;c.classList.add("shake")}else init()};
   $("#lgb").onclick=go;$("#p").addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();go()}});$("#e").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();$("#p").focus()}};setTimeout(()=>{const x=$("#e");x&&!x.value&&x.focus({preventScroll:true})},350)}
 async function out(){await sb.auth.signOut();me=null;login()}
-function go(p){last=p;NAVL=[];document.querySelectorAll(".nav button").forEach(b=>b.classList.toggle("on",b.dataset.p===p));M(spin);({dash,up,cus,fu,lb,adm,all})[p]()}
+function go(p){last=p;NAVL=[];window.__cur=null;document.querySelectorAll(".nav button").forEach(b=>b.classList.toggle("on",b.dataset.p===p));M(spin);({dash,up,cus,fu,lb,adm,all})[p]()}
 
 async function dash(){
   const{data:c=[]}=await sb.from("expo_customers").select("id,customer_name,company_name,city,mobile,lead_status,next_followup_date,card_image_path,created_at,updated_at").eq("salesperson_id",me.id).order("created_at",{ascending:false});
@@ -515,25 +523,29 @@ const STG_ORDER=["Interested","Quotation Sent","Negotiation","Converted","Follow
 function listUI(adm){const T=L.title;M(`${T?`<div class="lbh"><button class="btn l" id="bk">← Leaderboard</button><div><h3>${esc(T)}</h3><small>Customers by stage</small></div></div>`:""}<input id="q" placeholder="🔍 Search company, name, mobile…">${mic("#q")}<div class="lrow"><select id="fs"><option value="">All statuses</option>${STAGES.map(([v,l])=>`<option value="${v}">${l}</option>`).join("")}</select><select id="gv"><option value="">Latest first</option><option value="p" ${T?"selected":""}>Group by stage</option>${T?"":'<option value="s">Group by salesperson</option>'}</select></div>${adm?'<button class="btn l w" id="csv">⬇ Export CSV</button>':""}<div id="ls" class="lgrid" style="margin-top:12px"></div>`);
   if(L.restore&&LSAVE){$("#q").value=LSAVE.q;$("#fs").value=LSAVE.fs;$("#gv").value=LSAVE.gv}
   let t;$("#q").oninput=()=>{clearTimeout(t);t=setTimeout(()=>{L.page=0;load(true)},300)};$("#fs").onchange=()=>{L.page=0;load(true)};$("#gv").onchange=()=>{L.page=0;load(true)};if(adm)$("#csv").onclick=csv;const bk=$("#bk");if(bk)bk.onclick=()=>go("lb");load(true)}
-async function load(reset){const el=$("#ls"),gv=$("#gv").value;if(reset)el.innerHTML=spin;
+const LC=new Map();
+async function load(reset){const el=$("#ls"),gv=$("#gv").value,key=[L.uid||"",gv,$("#q").value,$("#fs").value].join("|");
+  if(reset){const h=LC.get(key);if(h){el.innerHTML=h.html;NAVL=[...h.navl]}else el.innerHTML=spin}
   let q=sb.from("expo_customers").select("id,customer_name,company_name,mobile,lead_status,city,created_at,updated_at,expo_salespeople(full_name)",{count:"exact"}).order("created_at",{ascending:false});
   q=gv?q.limit(1000):q.range(L.page*20,L.page*20+19);
   if(L.uid)q=q.eq("salesperson_id",L.uid);const s=($("#q").value||"").replace(/[,()%]/g,""),f=$("#fs").value;
   if(s)q=q.or(`customer_name.ilike.%${s}%,company_name.ilike.%${s}%,mobile.ilike.%${s}%`);if(f)q=f==="Interested"?q.in("lead_status",["New","Interested"]):q.eq("lead_status",f);
   const{data=[],count}=await q;LSAVE={q:$("#q").value,fs:f,gv};if(reset)el.innerHTML="";el.querySelector("#mr")?.remove();
+  const done=()=>{if(reset&&L.page===0){LC.set(key,{html:el.innerHTML,navl:[...NAVL]});if(LC.size>12)LC.delete(LC.keys().next().value)}};
   if(gv){const nm=c=>(c.company_name||c.customer_name||"").toLowerCase(),srt=(x,y)=>nm(x).localeCompare(nm(y)),G=new Map();
     data.forEach(c=>{const k=gv==="s"?(c.expo_salespeople?.full_name||"Unassigned"):nz(c.lead_status||"Interested");(G.get(k)||G.set(k,[]).get(k)).push(c)});
     let keys=[...G.keys()];keys=gv==="s"?keys.sort((x,y)=>x.localeCompare(y)):keys.sort((x,y)=>(STG_ORDER.indexOf(x)<0?99:STG_ORDER.indexOf(x))-(STG_ORDER.indexOf(y)<0?99:STG_ORDER.indexOf(y)));
     NAVL=[];el.innerHTML=keys.map(k=>{const A=G.get(k);if(gv==="s")A.sort((x,y)=>(STG_ORDER.indexOf(nz(x.lead_status))+1||99)-(STG_ORDER.indexOf(nz(y.lead_status))+1||99)||srt(x,y));else A.sort(srt);A.forEach(c=>NAVL.push(c.id));
-      return `<div class="gh">${gv==="s"?"🧑‍💼":(STG_ICO[k]||"•")} ${esc(gv==="s"?k:(LBL[k]||k))}<span>${A.length}</span></div>`+A.map(row).join("")}).join("")||'<div class="card">No customers found.</div>';anim();return}
+      return `<div class="gh">${gv==="s"?"🧑‍💼":(STG_ICO[k]||"•")} ${esc(gv==="s"?k:(LBL[k]||k))}<span>${A.length}</span></div>`+A.map(row).join("")}).join("")||'<div class="card">No customers found.</div>';anim();done();return}
   if(reset)NAVL=[];data.forEach(c=>NAVL.push(c.id));el.insertAdjacentHTML("beforeend",data.map(row).join("")||(reset?'<div class="card">No customers found.</div>':""));
-  if((L.page+1)*20<count)el.insertAdjacentHTML("beforeend",`<button class="btn l w" id="mr">Load more (${count-(L.page+1)*20})</button>`),$("#mr").onclick=()=>{L.page++;load(false)}}
+  if((L.page+1)*20<count)el.insertAdjacentHTML("beforeend",`<button class="btn l w" id="mr">Load more (${count-(L.page+1)*20})</button>`),$("#mr").onclick=()=>{L.page++;load(false)}
+  done()}
 async function csv(){const{data=[]}=await sb.from("expo_customers").select("*,expo_salespeople(full_name)").order("created_at").limit(5000);if(!data.length)return toast("Nothing to export",1);
   const rows=data.map(r=>{const{expo_salespeople:s,...o}=r;return{salesperson:s?.full_name,...o}}),k=Object.keys(rows[0]),q=v=>`"${String(v??"").replace(/"/g,'""')}"`;
   const a=document.createElement("a");a.href=URL.createObjectURL(new Blob(["\ufeff"+[k.join(","),...rows.map(r=>k.map(x=>q(r[x])).join(","))].join("\n")],{type:"text/csv"}));a.download="selmex_expo_customers.csv";a.click()}
 
-async function signed(p){if(!p)return"";const{data}=await sb.storage.from("expo-cards").createSignedUrl(p,300);return data?.signedUrl||""}
-function backFromDetail(){
+const SGC=new Map();async function signed(p){if(!p)return"";const h=SGC.get(p);if(h&&h.t>Date.now())return h.u;const{data}=await sb.storage.from("expo-cards").createSignedUrl(p,300);const u=data?.signedUrl||"";if(u)SGC.set(p,{u,t:Date.now()+240000});return u}
+function backFromDetail(){window.__cur=null;
   if(last==="sp"&&L.uid&&L.title){M(spin);L={uid:L.uid,page:0,title:L.title,restore:1};listUI(true)}
   else if(last==="all"){M(spin);L={uid:null,page:0,restore:1};listUI(true)}
   else if(last==="cus"){M(spin);L={uid:me.id,page:0,restore:1};listUI()}
@@ -542,13 +554,16 @@ function navArrows(id){const i=NAVL.indexOf(id);if(i<0||NAVL.length<2)return;win
   const mk=(cls,txt,to,tip)=>{const b=document.createElement("button");b.type="button";b.className="dnav "+cls;b.innerHTML=txt;b.title=tip;b.setAttribute("aria-label",tip);b.onclick=()=>{if(window.__dirty&&!confirm("You have unsaved changes. Discard them and open the other customer?"))return;detail(NAVL[to])};document.body.appendChild(b)};
   if(i>0)mk("dl","‹",i-1,"Previous customer ("+i+" of "+NAVL.length+")");
   if(i<NAVL.length-1)mk("dr","›",i+1,"Next customer ("+(i+2)+" of "+NAVL.length+")");
-  const c=document.createElement("div");c.className="dnav dc";c.textContent=(i+1)+" / "+NAVL.length;document.body.appendChild(c)}
+  [i-1,i+1].forEach(k=>{const n=NAVL[k];if(n&&!DC.has(n))setTimeout(()=>loadDetail(n).catch(()=>{}),400)});const c=document.createElement("div");c.className="dnav dc";c.textContent=(i+1)+" / "+NAVL.length;document.body.appendChild(c)}
 document.addEventListener("input",e=>{if(e.target.closest&&e.target.closest("#m"))window.__dirty=true});
 document.addEventListener("keydown",e=>{if(e.altKey||e.ctrlKey||e.metaKey||/INPUT|TEXTAREA|SELECT/.test((e.target.tagName||"")))return;if(e.key==="ArrowLeft")document.querySelector(".dnav.dl")?.click();if(e.key==="ArrowRight")document.querySelector(".dnav.dr")?.click()});
-async function detail(id){M(spin);
-  const{data:c}=await sb.from("expo_customers").select("*,expo_salespeople(full_name)").eq("id",id).single();
-  const{data:p=[]}=await sb.from("expo_customer_products").select("product").eq("customer_id",id);
-  const[f,b]=await Promise.all([signed(c.card_image_path),signed(c.card_back_path)]),wa=waNum(c),idx=STAGES.findIndex(x=>x[0]===nz(c.lead_status)),nx=idx>=0&&idx<4?STAGES[idx+1]:null;let sel=nz(c.lead_status||"Interested");
+const DC=new Map();
+async function loadDetail(id){const[a,b]=await Promise.all([sb.from("expo_customers").select("*,expo_salespeople(full_name)").eq("id",id).single(),sb.from("expo_customer_products").select("product").eq("customer_id",id)]);if(!a.data)throw new Error("not found");const d={c:a.data,p:b.data||[]};DC.set(id,d);if(DC.size>40)DC.delete(DC.keys().next().value);return d}
+async function detail(id){window.__cur=id;const hit=DC.get(id);
+  if(hit){renderDetail(id,hit.c,hit.p);loadDetail(id).then(d=>{if(window.__cur!==id||window.__dirty)return;if(JSON.stringify([d.c,d.p])!==JSON.stringify([hit.c,hit.p]))renderDetail(id,d.c,d.p)}).catch(()=>{});return}
+  M(spin);let d;try{d=await loadDetail(id)}catch(e){toast("Could not open customer",1);return}
+  if(window.__cur!==id)return;renderDetail(id,d.c,d.p)}
+async function renderDetail(id,c,p){window.__dirty=false;const wa=waNum(c),idx=STAGES.findIndex(x=>x[0]===nz(c.lead_status)),nx=idx>=0&&idx<4?STAGES[idx+1]:null;let sel=nz(c.lead_status||"Interested");
   M(`<button class="btn l" onclick="backFromDetail()" style="margin:0 0 10px">‹ Back</button>
   <div class="dg"><div><div class="card"><div style="display:flex;gap:12px;align-items:center"><div class="av">${esc((c.company_name||c.customer_name||"?").charAt(0).toUpperCase())}</div><div class="mid"><b style="font-size:19px">${esc(c.company_name||c.customer_name||"Customer")}</b><small>${c.company_name?"👤 "+esc(c.customer_name||"")+(c.city?" · ":""):""}${c.city?"📍 "+esc(c.city):""}</small>${c.expo_salespeople?`<small class="by">👤 Collected by ${esc(c.expo_salespeople.full_name)}</small>`:""}</div>${pill(c.lead_status)}</div>
   ${c.created_at?`<div class="dts">🗓️ Entered <b>${ft(c.created_at)}</b>${upd(c)?`<br>✏️ Last updated <b>${ft(c.updated_at)}</b>`:""}</div>`:""}
@@ -556,15 +571,16 @@ async function detail(id){M(spin);
   <div class="card"><h3>🔄 Update progress</h3><div class="steps">${STAGES.map(([v,l],i)=>`<button type="button" class="step ${v===nz(c.lead_status)?"on":i<idx&&idx<5?"done":""}" data-v="${v}">${l}</button>`).join("")}</div>
   ${nx?`<button class="btn r w" id="nxt">Move to ${nx[1]} →</button>`:""}
   <label>Next follow-up date</label><input type="date" id="nfd" value="${c.next_followup_date||""}"><label>Update note</label><textarea id="nnt" rows="2" placeholder="e.g. Quotation sent on WhatsApp, sample couriered…"></textarea>${mic("#nnt")}<button class="btn g w" id="upb">💾 Save changes</button></div></div>
-  <div><div class="card"><h3>📋 Full info</h3><div class="thumbs">${f?`<img src="${f}">`:""}${b?`<img src="${b}">`:""}</div>${form(c,p.map(x=>x.product))}<button class="btn g w" id="sv">💾 Save changes</button></div></div></div>`);
-  navArrows(id);const fs=document.querySelector('[data-k="lead_status"]'),setSel=v=>{sel=v;document.querySelectorAll(".step").forEach(x=>x.classList.toggle("on",x.dataset.v===v));if(fs)fs.value=v};
+  <div><div class="card"><h3>📋 Full info</h3><div class="thumbs" id="thm">${(c.card_image_path||c.card_back_path)?'<div class="sk" style="height:110px;margin:0"></div>':""}</div>${form(c,p.map(x=>x.product))}<button class="btn g w" id="sv">💾 Save changes</button></div></div></div>`);
+  navArrows(id);if(c.card_image_path||c.card_back_path)Promise.all([signed(c.card_image_path),signed(c.card_back_path)]).then(([f,b])=>{const t=$("#thm");if(!t||window.__cur!==id)return;t.innerHTML=(f?`<img src="${f}" decoding="async">`:"")+(b?`<img src="${b}" decoding="async">`:"")}).catch(()=>{});
+  const fs=document.querySelector('[data-k="lead_status"]'),setSel=v=>{sel=v;document.querySelectorAll(".step").forEach(x=>x.classList.toggle("on",x.dataset.v===v));if(fs)fs.value=v};
   if(fs){fs.value=sel;fs.onchange=()=>setSel(fs.value)}
   const saveAll=async(quiet)=>{const v=read(),d=$("#nfd").value||null,n=$("#nnt").value.trim();if(!needCo(v))return false;v.lead_status=sel;if(d)v.next_followup_date=d;
     if(n||sel!==nz(c.lead_status))v.remarks=(v.remarks?v.remarks+"\n":"")+`[${fd(new Date())} · ${LBL[sel]||sel}]${n?" "+n:""}`;
     const{error}=await sb.from("expo_customers").update(v).eq("id",id);if(error){toast(error.message,1);return false}
     await sb.from("expo_customer_products").delete().eq("customer_id",id);const pr=prods();if(pr.length)await sb.from("expo_customer_products").insert(pr.map(x=>({customer_id:id,product:x})));
     if(d)await sb.from("expo_followups").insert({customer_id:id,due_date:d,note:n||null});
-    if(!quiet){toast("Saved ✓");detail(id)}return true};
+    DC.delete(id);if(!quiet){toast("Saved ✓");detail(id)}return true};
   const lock=async(b,fn)=>{b.disabled=true;await fn();b.disabled=false};
   document.querySelectorAll(".step").forEach(b=>b.onclick=()=>setSel(b.dataset.v));
   $("#upb").onclick=e=>lock(e.currentTarget,()=>saveAll());$("#sv").onclick=e=>lock(e.currentTarget,()=>saveAll());if(nx)$("#nxt").onclick=e=>lock(e.currentTarget,()=>{setSel(nx[0]);return saveAll()});
@@ -582,12 +598,12 @@ async function fu(){const{data=[]}=await sb.from("expo_customers").select("id,cu
   M(`<h3>📅 My Follow-ups</h3>${g("Overdue",data.filter(x=>x.next_followup_date<t),"red")}${g("Today",data.filter(x=>x.next_followup_date===t))}${g("Upcoming",data.filter(x=>x.next_followup_date>t))}${data.length?"":'<div class="card">No follow-ups scheduled.</div>'}`)}
 
 const PTS={cust:1,lead:1,won:3};
-async function lb(){let{data=[]}=await sb.rpc("expo_leaderboard");
+async function lb(){const[{data:_d=[]},_sp]=await Promise.all([sb.rpc("expo_leaderboard"),isAdm()?sb.from("expo_salespeople").select("id,full_name"):Promise.resolve({data:[]})]);let data=_d;
   const ORD=["nitish","hanumant","manjeet","preeti"],pos=n=>{const i=ORD.findIndex(k=>String(n).toLowerCase().includes(k));return i<0?99:i},md=["🥇","🥈","🥉"];
   data=data.filter(r=>pos(r.full_name)<99).map(r=>({...r,total:+r.total||0,interested:+r.interested||0,converted:+r.converted||0})).map(r=>({...r,pts:r.total*PTS.cust+r.interested*PTS.lead+r.converted*PTS.won}));
   data.sort((x,y)=>y.pts-x.pts||y.converted-x.converted||y.total-x.total||pos(x.full_name)-pos(y.full_name));
   const mx=Math.max(1,...data.map(r=>r.pts));let ids={};
-  if(isAdm()){const{data:sp=[]}=await sb.from("expo_salespeople").select("id,full_name");sp.forEach(x=>ids[x.full_name]=x.id)}
+  (_sp.data||[]).forEach(x=>ids[x.full_name]=x.id);
   window.__lbOpen=n=>{const id=ids[n];if(!id)return;last="sp";NAVL=[];L={uid:id,page:0,title:n,name:n};listUI(true)};
   M(`<div class="lbs"><h3 class="lbt">🏆 Sales Leaderboard</h3><p class="lbsub">Ranked by points · ${PTS.cust} per customer · ${PTS.lead} per active lead · ${PTS.won} per order won${isAdm()?" · tap a name to see their customers":""}</p>${data.map((r,i)=>`<div class="lbc t${Math.min(i,3)} ${r.full_name===me.full_name?"me":""} ${isAdm()&&ids[r.full_name]?"clk":""}" ${isAdm()&&ids[r.full_name]?`onclick="__lbOpen(decodeURIComponent('${encodeURIComponent(r.full_name)}'))"`:""}><div class="pos">${md[i]||i+1}</div><div class="av">${esc(r.full_name.charAt(0).toUpperCase())}</div><div class="mid"><b>${esc(r.full_name)}${r.full_name===me.full_name?" (you)":""}</b><small>${r.pts} points</small><div class="meter"><i style="width:${Math.max(4,r.pts/mx*100)}%"></i></div></div><div class="st3"><div><b>${r.total}</b>Customers</div><div><b>${r.interested}</b>Active leads</div><div><b>${r.converted}</b>Orders won</div></div></div>`).join("")||'<div class="card">No data yet.</div>'}</div>`)}
 async function adm(){DRL.length=0;const[{data:c0=[]},{data:pr0=[]},{data:l0=[]},{data:sp=[]}]=await Promise.all([sb.from("expo_customers").select("id,salesperson_id,lead_status,city,industry,next_followup_date,customer_name,company_name,designation,mobile,alternate_mobile,email,address,requirements,remarks,created_at,updated_at,expo_salespeople(full_name)"),sb.from("expo_customer_products").select("customer_id,product"),sb.rpc("expo_leaderboard"),sb.from("expo_salespeople").select("id").eq("show_on_leaderboard",true)]);
